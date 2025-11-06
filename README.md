@@ -10,6 +10,15 @@ No.8은 대인화된 대시보드를 구성하는 Front-end only Application입�
 
 위젯 형식의 대시보드를 지원하며 기본 제공 위젯 이외에 iframe, embed 등 사이트 자체에서 지원하는 위젯도 적용 가능합니다.
 
+<br>
+
+사용된 Framework, Library
+
+- React 19.1.1
+- Axios 1.13.2
+- react-grid-layout 1.5.2
+- styled-components 6.1.19
+- Firebase 12.5.0
 
 
 <hr>

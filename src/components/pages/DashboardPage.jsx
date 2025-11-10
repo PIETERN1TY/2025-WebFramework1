@@ -10,10 +10,10 @@ import Header from "./layout/Header.jsx";
 const DashboardPage = () =>
 {
     return (
-        <div>
+        <>
             <Header />
             {/*<Grid />*/}
-        </div>
+        </>
     );
 }
 

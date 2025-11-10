@@ -3,6 +3,13 @@
  *
  * 가보자고
  */
+import DashboardPage from "./components/pages/DashboardPage.jsx";
 
-import React from 'react'
-import ReactDOM from "react-dom/client";
+const App = () =>
+{
+    return (
+        <DashboardPage />
+    )
+}
+
+export default App;

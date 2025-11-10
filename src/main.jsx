@@ -1,9 +1,12 @@
-import React, { StrictMode } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import './styles/css/index.css'
+// import "krds-uiux/resources/css/component/component.css"
+import "krds-uiux/resources/css/component/output.css"
+import App from "./App.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
-    <App.jsx />
+    <App />
 );

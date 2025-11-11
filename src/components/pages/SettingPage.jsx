@@ -12,13 +12,32 @@
  */
 
 import React from 'react'
+import SettingFirebase from "./settingChildren/SettingFirebase.jsx";
+import SettingTheme from "./settingChildren/SettingTheme.jsx";
+import Footer from "./settingChildren/Footer.jsx"
+import SettingScreensaver from "./settingChildren/SettingScreensaver.jsx";
+
 
 const SettingPage = () =>
 {
+    const separatorStyle = {
+        height: '1px',
+        backgroundColor: '#e0e0e0',
+        margin: '20px 0'
+    };
+
     return (
         <div>
-            <h2>설정</h2>
-            <p>설정 페이지</p>
+            <h1>설정</h1>
+            <div style={separatorStyle}></div>
+            <SettingFirebase />
+            <div style={separatorStyle}></div>
+            <SettingTheme />
+            <div style={separatorStyle}></div>
+            {/*스크린 세이버 설정*/}
+            <SettingScreensaver />
+            <Footer />
+
         </div>
     );
 }

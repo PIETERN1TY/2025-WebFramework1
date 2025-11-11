@@ -1,0 +1,25 @@
+/**
+ * src/components/pages/settingChildren/grandChildren/colorPalette.css
+ */
+.palette {
+  margin-bottom: 1rem;
+  font-family: sans-serif;
+}
+
+.palette label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.color-bar {
+  display: flex;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.color-segment {
+  flex: 1; /* 각 색상 블록이 동일한 너비를 가지도록 설정 */
+}

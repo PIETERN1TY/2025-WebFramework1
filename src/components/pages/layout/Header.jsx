@@ -4,10 +4,6 @@
  * 페이지에 삽입될 헤더 컴포넌트.
  * 로고, 설정 버튼, 위젯 추가 버튼을 포함하며 각 버튼 클릭 시 모달을 엽니다.
  *
- * TODO:
- * 1. [x] 로고
- * 2. [] 설정 버튼
- * 3. [] 위젯 추가 버튼
  */
 
 import React, { useState } from 'react';
@@ -36,8 +32,8 @@ const Header = () => {
         <header className="DashboardHeader">
             <a href="/" className="logo">No.8</a>
             <div className="header-actions">
-                <Button className={'tertiary large icon'} onClick={openSettingModal}><SettingIcon /></Button>
-                <Button className={"secondary large icon"} onClick={openAddWidgetModal}><WidgetAddIcon /></Button>
+                <Button className={'xlarge icon'} onClick={openSettingModal}><SettingIcon /></Button>
+                <Button className={"xlarge icon"} onClick={openAddWidgetModal}><WidgetAddIcon /></Button>
             </div>
 
             {/* 설정 모달 */}

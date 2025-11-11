@@ -5,3 +5,27 @@
 .root {
     color-scheme: light dark;
 }
+
+/* AddWidget Component Styles */
+.form-tit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.help-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    font-size: 0.8rem;
+}
+
+.input-guide {
+    font-size: 1.5rem;
+    color: #666;
+    margin-top: 8px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}

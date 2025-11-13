@@ -12,9 +12,9 @@ const SettingTheme = () =>
     return(
         <div>
             <h3>테마 설정</h3>
-            {paletteData.palettes.map((palette, index) => (
+            {paletteData.palettes.map((palette) => (
                 <ColorPalette
-                    key={index}
+                    key={palette.name}
                     name={palette.name}
                     colors={Object.values(palette.colors)}
                 />

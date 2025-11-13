@@ -15,25 +15,20 @@ import React from 'react'
 import SettingFirebase from "./settingChildren/SettingFirebase.jsx";
 import SettingTheme from "./settingChildren/SettingTheme.jsx";
 import Footer from "./settingChildren/Footer.jsx"
+import Separator from "./settingChildren/Separator.jsx";
 import SettingScreensaver from "./settingChildren/SettingScreensaver.jsx";
 
 
 const SettingPage = () =>
 {
-    const separatorStyle = {
-        height: '1px',
-        backgroundColor: '#e0e0e0',
-        margin: '20px 0'
-    };
-
     return (
         <div>
             <h1>설정</h1>
-            <div style={separatorStyle}></div>
+            <Separator />
             <SettingFirebase />
-            <div style={separatorStyle}></div>
+            <Separator />
             <SettingTheme />
-            <div style={separatorStyle}></div>
+            <Separator />
             {/*스크린 세이버 설정*/}
             <SettingScreensaver />
             <Footer />

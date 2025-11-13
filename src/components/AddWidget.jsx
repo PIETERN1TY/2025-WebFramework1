@@ -14,7 +14,7 @@ const AddWidget = () =>
 
     // 위젯 타입에 따라 입력 가이드 텍스트를 결정하는 객체
     const guideTextMap = {
-        Youtube: "유튜브 영상 또는 채널 URL을 입력하세요.",
+        Youtube: "유튜브 영상 또는 재생목록 URL을 입력하세요.",
         Weather: "도시 이름을 영문으로 입력하세요. (예: Seoul)",
         Stocks: "종목 코드를 입력하세요. (예: 005930)",
         News: "관심있는 뉴스 키워드를 입력하세요.",

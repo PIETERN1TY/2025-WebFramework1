@@ -1,0 +1,210 @@
+.widget-page-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.widget-page-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.widget-page-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.save-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+/* 콘텐츠 영역 (캔버스 + 팔레트) */
+.widget-page-content {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 레이아웃 편집기 중앙 영역 */
+.layout-canvas {
+    flex-grow: 1;
+    background-color: #e6f7ff;
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 600px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: auto;
+}
+
+/* 빈 캔버스 메시지 */
+.empty-canvas-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #666;
+    font-size: 1.2em;
+}
+
+.empty-canvas-message p {
+    margin: 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    border: 2px dashed #aaa;
+}
+
+/* 위젯 팔레트 (오른쪽 위젯 목록) */
+.widget-palette {
+    width: 280px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+}
+
+.widget-palette h3 {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* 위젯 목록 */
+.widget-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 드래그 가능한 위젯 아이템 */
+.widget-palette-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: move;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.widget-palette-item:hover {
+    background-color: #e8f4ff;
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.widget-palette-item:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+}
+
+.widget-icon {
+    font-size: 1.5em;
+}
+
+.widget-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.no-widgets-message {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* RGL 편집 모드에서 경계선 강조 */
+.rgl-layout {
+    min-height: 400px;
+}
+
+.rgl-layout .react-resizable-handle {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 6" width="6" height="6"><path d="M6 6H4L6 4Z" fill="#888"/></svg>');
+    background-position: bottom right;
+    padding: 0 3px 3px 0;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    cursor: se-resize;
+    opacity: 0.7;
+}
+
+/* 위젯 아이템 래퍼 (편집기 내에서) */
+.widget-item-wrapper {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.widget-item-wrapper:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: #007bff;
+}
+
+/* 위젯 삭제 버튼 */
+.widget-remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.widget-item-wrapper:hover .widget-remove-btn {
+    opacity: 1;
+}
+
+.widget-remove-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.1);
+}
+
+.widget-remove-btn:active {
+    transform: scale(0.95);
+}

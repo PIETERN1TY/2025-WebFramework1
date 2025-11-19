@@ -1,0 +1,91 @@
+/* src/components/widgets/WeatherWidget.css */
+.weather-widget {
+    background-color: rgb(192, 230, 255);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    color: #333;
+    font-family: sans-serif;
+}
+
+/* --- 소형 위젯 스타일 --- */
+.weather-small {
+    width: 100%; 
+}
+
+.weather-small-temp {
+    font-size: 2.5em;
+    font-weight: 300;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.weather-small-info {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weather-small-detail {
+    text-align: center;
+    padding: 5px 0;
+    object-fit: cover;
+}
+
+.weather-small-detail img {
+    padding:10px;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+}
+
+.weather-small-hourly {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+/* --- 대형 위젯 스타일 --- */
+.weather-large {
+    width: 100%; 
+    max-width: 404px; /* 최대 크기를 404px로 제한 */
+    height: 191px;
+}
+
+.weather-large-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.weather-large-header h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555;
+    margin: 0;
+}
+
+.weather-large-temp {
+    font-size: 3em;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.weather-large-high-low {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+}
+
+.weather-large-hourly {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}

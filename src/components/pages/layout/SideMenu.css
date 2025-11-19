@@ -1,0 +1,105 @@
+/* src/components/pages/layout/SideMenu.css 파일 수정 */
+
+/* 1. 전체 메뉴 컨테이너 (.sidebar-container) 수정 */
+.sidebar-container {
+    width: 300px; 
+    height: 100vh; 
+    background-color: #2f4f4f; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    box-sizing: border-box;
+    flex-shrink: 0; 
+    
+    /* ***** 주요 변경 사항 ***** */
+    /* 자식 요소(프로필, 메뉴)들을 수직으로 분산시킵니다. */
+    justify-content: space-between; 
+  }
+  
+  /* 2. 프로필 섹션 (.profile-section)은 그대로 둡니다. */
+  
+  
+  /* 3. 메뉴 항목 섹션 (.menu-section) 수정 */
+  .menu-section {
+    width: 100%;
+    /* flex-grow: 1; 이전에 맨 아래 항목을 내릴 때 사용했던 속성은 제거하거나 주석 처리합니다. */
+    /* flex-grow: 1; */ 
+  }
+  
+  /* 나머지 .menu-item, .active 등 스타일은 그대로 유지 */
+  
+  /* 프로필 섹션 */
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 15px 20px 15px;
+    text-align: center;
+  }
+  
+  .profile-image-wrapper {
+    width: 200px; 
+    height: 200px; 
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .user-name {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .user-email {
+    font-size: 1.2em;
+    color: #c0c0c0; 
+  }
+  
+  .menu-section {
+    width: 100%;
+    /* flex-grow: 1; 이전에 맨 아래 항목을 내릴 때 사용했던 속성은 제거하거나 주석 처리합니다. */
+
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 35px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 1.2em;
+    text-decoration: none; /* Link의 기본 밑줄 제거 */
+    color: white; /* Link의 기본 파란색 글자색 방지 */
+    outline: none; 
+  }
+
+.menu-item:focus,
+.menu-item:focus-visible, 
+.menu-item:active { /* :active는 클릭 중 상태에 대비 */
+  outline: none !important; /* !important를 사용하여 브라우저 기본 스타일을 강제로 덮어씁니다. */
+  box-shadow: none !important; 
+}
+
+  .menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
+  }
+  
+  .menu-icon {
+    margin-right: 15px;
+    font-size: 1.5em;
+  }
+  
+  /* 선택된 메뉴 항목 스타일 (HOME 부분의 밝은 녹색) */
+  .menu-item.active {
+    background-color: #6b8e23; 
+    color: white;
+    font-weight: bold;
+  }

@@ -47,3 +47,114 @@ No.8은 개인화된 대시보드를 구성하는 Front-end only Application입�
 이 프로젝트는 한성대학교의 2025년 2학기 웹프레임워크1 (N)의 과정 중에 진행 된 프로젝트입니다.
 
 행정안전부에서 2024년 작성하여 공공누리 제1유형으로 개방한 ‘[범정부 UI/UX 디자인시스템(KRDS)](https://www.krds.go.kr)’을 이용하였습니다.
+```
+number_8
+├─ AGENT.md
+├─ README.md
+├─ eslint.config.js
+├─ index.html
+├─ number_8.iml
+├─ package-lock.json
+├─ package.json
+├─ src
+│  ├─ App.jsx
+│  ├─ assets
+│  │  ├─ colorPalette.json
+│  │  ├─ colorPalette.yml
+│  │  └─ images
+│  │     ├─ arrow.png
+│  │     ├─ canvas.png
+│  │     ├─ home.png
+│  │     ├─ moon.png
+│  │     ├─ settings.png
+│  │     ├─ toro.jpg
+│  │     └─ widget.png
+│  ├─ components
+│  │  ├─ AddWidget.jsx
+│  │  ├─ common
+│  │  │  ├─ Button.jsx
+│  │  │  ├─ LoadingSpinner.jsx
+│  │  │  └─ Modal.jsx
+│  │  ├─ pages
+│  │  │  ├─ CanvasPage.jsx
+│  │  │  ├─ DashboardPage.jsx
+│  │  │  ├─ HomePage.css
+│  │  │  ├─ HomePage.jsx
+│  │  │  ├─ SettingsPage.css
+│  │  │  ├─ SettingsPage.jsx
+│  │  │  ├─ WidgetPage.css
+│  │  │  ├─ WidgetPage.jsx
+│  │  │  ├─ layout
+│  │  │  │  ├─ Grid.jsx
+│  │  │  │  ├─ Header.jsx
+│  │  │  │  ├─ SideMenu.css
+│  │  │  │  ├─ SideMenu.jsx
+│  │  │  │  └─ icons
+│  │  │  │     ├─ WidgetAddIcon.jsx
+│  │  │  │     └─ settingIcon.jsx
+│  │  │  └─ settingChildren
+│  │  │     ├─ Footer.jsx
+│  │  │     ├─ Separator.jsx
+│  │  │     ├─ SettingFirebase.jsx
+│  │  │     ├─ SettingScreensaver.jsx
+│  │  │     ├─ SettingTheme.jsx
+│  │  │     └─ grandChildren
+│  │  │        └─ colorPalette.jsx
+│  │  ├─ screensaver
+│  │  │  ├─ BackgroundSlide.jsx
+│  │  │  └─ ScreenSaver.jsx
+│  │  └─ widget
+│  │     ├─ Basic
+│  │     │  ├─ calendar
+│  │     │  │  ├─ CalendarWidget.css
+│  │     │  │  └─ CalendarWidget.jsx
+│  │     │  ├─ news
+│  │     │  │  ├─ NewsAPI.jsx
+│  │     │  │  ├─ NewsWidget.css
+│  │     │  │  ├─ NewsWidgetLarge.jsx
+│  │     │  │  └─ NewsWidgetSmall.jsx
+│  │     │  ├─ stocks
+│  │     │  │  ├─ StockAPI.jsx
+│  │     │  │  └─ StockWidget.jsx
+│  │     │  ├─ translator
+│  │     │  │  ├─ TranslatorWidget.css
+│  │     │  │  └─ TranslatorWidget.jsx
+│  │     │  └─ weather
+│  │     │     ├─ WeatherAPI.jsx
+│  │     │     ├─ WeatherWidget.css
+│  │     │     ├─ WeatherWidgetLarge.jsx
+│  │     │     └─ WeatherWidgetSmall.jsx
+│  │     ├─ iframe
+│  │     │  ├─ IframeWidget.jsx
+│  │     │  ├─ spotify
+│  │     │  │  └─ SpotifyWidget.jsx
+│  │     │  └─ youtube
+│  │     │     └─ YoutubeWidget.jsx
+│  │     └─ widgetCommon
+│  │        └─ WidgerWrapper.jsx
+│  ├─ context
+│  │  ├─ AppContext.jsx
+│  │  └─ WidgetContext.jsx
+│  ├─ hooks
+│  │  ├─ useAuth.jsx
+│  │  ├─ useAxios.jsx
+│  │  ├─ useFirestore.jsx
+│  │  └─ useInactivityTimer.jsx
+│  ├─ main.jsx
+│  ├─ pages
+│  │  └─ DashboardPage.jsx
+│  ├─ services
+│  │  ├─ API.jsx
+│  │  └─ Firebase.jsx
+│  └─ styles
+│     ├─ GlobalStyle.jsx
+│     ├─ Theme.jsx
+│     └─ css
+│        ├─ Footer.css
+│        ├─ Header.css
+│        ├─ SettingFirebase.css
+│        ├─ colorPalette.css
+│        └─ index.css
+└─ vite.config.js
+
+```

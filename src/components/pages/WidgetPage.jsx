@@ -7,7 +7,7 @@ import { WIDGET_OPTIONS, INITIAL_LAYOUT } from '../../App.jsx';
 // 필수 CSS import
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import '../pages/WidgetPage.css';
+import './WidgetPage.css';
 
 // 저장 함수
 const saveLayout = (layout) => {
@@ -23,10 +23,10 @@ const WidgetPage = () => {
     const [currentLayout, setCurrentLayout] = useState(initialLayout);
     const [draggedWidget, setDraggedWidget] = useState(null);
     
-    // 고정된 그리드 크기 설정
-    const layoutWidth = 1200; // 고정 너비
+    // 고정 너비 (패딩 20px 제외)
+    const layoutWidth = 984; // 1004 - 20 = 984
 
-    // 레이아웃 변경 핸들러 (드래그, 리사이즈 시 호출)
+    // 레이아웃 변경 핸들러
     const handleLayoutChange = (newLayout) => {
         setCurrentLayout(newLayout);
     };
@@ -58,22 +58,24 @@ const WidgetPage = () => {
         }
 
         // 캔버스 영역의 위치 계산
-        const canvas = e.currentTarget;
+        const canvas = e.currentTarget.querySelector('.rgl-layout');
+        if (!canvas) return;
+        
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
         // 그리드 좌표로 변환
-        const colWidth = rect.width / 12;
-        const rowHeight = 100;
+        const colWidth = layoutWidth / 12;
+        const rowHeight = 83;
         const gridX = Math.floor(x / colWidth);
         const gridY = Math.floor(y / rowHeight);
 
         // 새 위젯 추가
         const newItem = {
             i: draggedWidget.id,
-            x: Math.min(gridX, 10), // 최대 x 좌표 제한 (w=2이므로 10까지)
-            y: gridY,
+            x: Math.min(Math.max(gridX, 0), 10),
+            y: Math.max(gridY, 0),
             w: 2,
             h: 2
         };
@@ -89,7 +91,7 @@ const WidgetPage = () => {
 
     // 위젯 삭제
     const handleRemoveWidget = (e, widgetId) => {
-        e.stopPropagation(); // 이벤트 전파 방지
+        e.stopPropagation();
         const confirmed = window.confirm('이 위젯을 삭제하시겠습니까?');
         if (confirmed) {
             setCurrentLayout(currentLayout.filter(item => item.i !== widgetId));
@@ -126,9 +128,11 @@ const WidgetPage = () => {
                         className="rgl-layout"
                         layout={currentLayout}
                         cols={12}
-                        rowHeight={100}
+                        rowHeight={83}
                         width={layoutWidth}
                         onLayoutChange={handleLayoutChange}
+                        margin={[10, 10]}
+                        containerPadding={[0, 0]}
                         compactType={null}
                         isDraggable={true}
                         isResizable={true}

@@ -9,6 +9,7 @@ import CalendarWidget from '../src/components/widget/Basic/calendar/CalendarWidg
 import WeatherWidgetLarge from '../src/components/widget/Basic/weather/WeatherWidgetLarge.jsx';
 import WeatherWidgetSmall from '../src/components/widget/Basic/weather/WeatherWidgetSmall.jsx';
 import TranslatorWidget from '../src/components/widget/Basic/translator/TranslatorWidget.jsx';
+import CanvasEditor from './components/pages/CanvasEditor.jsx'; 
 // 참고: App.css import는 제거된 상태를 유지합니다.
 
 function App() {

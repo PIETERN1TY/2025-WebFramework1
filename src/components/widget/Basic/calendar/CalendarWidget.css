@@ -5,7 +5,7 @@
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    padding: 10px;
+    padding: 7px;
     width: 320px; /* 위젯 크기 고정 (예시 이미지에 맞춰 조정) */
     max-width: 100%;
     margin: 0 auto;
@@ -62,7 +62,7 @@
 /* 날짜 타일 (Day cells) */
 .react-calendar__tile {
     max-width: 100%;
-    padding: 10px 6.6667px;
+    padding: 7px 6.6667px;
     background: none;
     text-align: center;
     line-height: 16px;
@@ -87,7 +87,7 @@
 
 /* 이웃 달 날짜 숨기기 (showNeighboringMonth: false 일 때) */
 .react-calendar__month-view__days__day--neighboringMonth {
-    color: transparent; /* 글자 자체를 투명하게 만듭니다. */
+    color: transparent; 
     pointer-events: none; /* 클릭 방지 */
 }
 

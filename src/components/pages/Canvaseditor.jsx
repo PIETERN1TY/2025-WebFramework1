@@ -12,6 +12,7 @@ const CanvasEditor = () => {
     const { canvasId } = useParams();
     const navigate = useNavigate();
     
+    const [currentUser, setCurrentUser] = useState(null);
     const [canvasData, setCanvasData] = useState(null);
     const [currentLayout, setCurrentLayout] = useState([]);
     const [canvasName, setCanvasName] = useState('');
@@ -20,23 +21,29 @@ const CanvasEditor = () => {
     
     const layoutWidth = 1180;
 
-    // 캔버스 데이터 로드
+    // 현재 사용자 및 캔버스 데이터 로드
     useEffect(() => {
-        const loadCanvas = () => {
-            const data = localStorage.getItem(`canvas_${canvasId}`);
-            if (data) {
-                const parsed = JSON.parse(data);
-                setCanvasData(parsed);
-                setCurrentLayout(parsed.layout || []);
-                setCanvasName(parsed.name || '');
-            } else {
-                alert('캔버스를 찾을 수 없습니다.');
-                navigate('/canvas');
-            }
-        };
-
-        loadCanvas();
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        setCurrentUser(user);
+        loadCanvas(user.id);
     }, [canvasId, navigate]);
+
+    const loadCanvas = (userId) => {
+        const data = localStorage.getItem(`canvas_${userId}_${canvasId}`);
+        if (data) {
+            const parsed = JSON.parse(data);
+            setCanvasData(parsed);
+            setCurrentLayout(parsed.layout || []);
+            setCanvasName(parsed.name || '');
+        } else {
+            alert('캔버스를 찾을 수 없습니다.');
+            navigate('/canvas');
+        }
+    };
 
     // 레이아웃 변경 핸들러
     const handleLayoutChange = (newLayout) => {
@@ -52,10 +59,10 @@ const CanvasEditor = () => {
             updatedAt: new Date().toISOString()
         };
 
-        localStorage.setItem(`canvas_${canvasId}`, JSON.stringify(updatedCanvas));
+        localStorage.setItem(`canvas_${currentUser.id}_${canvasId}`, JSON.stringify(updatedCanvas));
         
         // 활성 캔버스인 경우 HomePage 업데이트
-        const activeCanvasId = localStorage.getItem('activeCanvasId');
+        const activeCanvasId = localStorage.getItem(`activeCanvas_${currentUser.id}`);
         if (activeCanvasId === canvasId) {
             window.dispatchEvent(new Event('canvasChanged'));
         }
@@ -75,7 +82,6 @@ const CanvasEditor = () => {
         
         if (!draggedWidget) return;
 
-        // 이미 배치된 위젯 확인
         const alreadyPlaced = currentLayout.some(item => item.i === draggedWidget.id);
         if (alreadyPlaced) {
             alert('이미 배치된 위젯입니다!');
@@ -83,7 +89,6 @@ const CanvasEditor = () => {
             return;
         }
 
-        // 드롭 위치 계산
         const canvas = e.currentTarget.querySelector('.canvas-grid-layout');
         if (!canvas) return;
         
@@ -91,13 +96,11 @@ const CanvasEditor = () => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // 그리드 좌표 변환
         const colWidth = layoutWidth / 12;
         const rowHeight = 100;
         const gridX = Math.floor(x / colWidth);
         const gridY = Math.floor(y / rowHeight);
 
-        // 새 위젯 추가
         const newItem = {
             i: draggedWidget.id,
             x: Math.min(Math.max(gridX, 0), 10),
@@ -141,7 +144,7 @@ const CanvasEditor = () => {
         navigate('/canvas');
     };
 
-    if (!canvasData) {
+    if (!canvasData || !currentUser) {
         return (
             <div className="canvas-editor-loading">
                 <p>캔버스 로딩 중...</p>
@@ -149,12 +152,10 @@ const CanvasEditor = () => {
         );
     }
 
-    // 렌더링할 위젯들
     const widgetsToRender = WIDGET_OPTIONS.filter(option => 
         currentLayout.some(item => item.i === option.id)
     );
 
-    // 아직 배치되지 않은 위젯들
     const availableWidgets = WIDGET_OPTIONS.filter(option =>
         !currentLayout.some(item => item.i === option.id)
     );
@@ -193,7 +194,6 @@ const CanvasEditor = () => {
             </div>
 
             <div className="canvas-editor-content">
-                {/* 캔버스 영역 */}
                 <div 
                     className="canvas-drop-area"
                     onDrop={handleDrop}
@@ -235,7 +235,6 @@ const CanvasEditor = () => {
                     )}
                 </div>
 
-                {/* 위젯 팔레트 */}
                 <div className="widget-palette">
                     <h3>위젯 목록</h3>
                     <div className="widget-palette-scroll">

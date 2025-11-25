@@ -10,6 +10,7 @@ import WeatherWidgetLarge from '../src/components/widget/Basic/weather/WeatherWi
 import WeatherWidgetSmall from '../src/components/widget/Basic/weather/WeatherWidgetSmall.jsx';
 import TranslatorWidget from '../src/components/widget/Basic/translator/TranslatorWidget.jsx';
 import CanvasEditor from './components/pages/CanvasEditor.jsx'; 
+
 // 참고: App.css import는 제거된 상태를 유지합니다.
 
 function App() {
@@ -32,6 +33,7 @@ export const WIDGET_OPTIONS = [
   { id: 'trans', name: '번역기', Component: TranslatorWidget },
   { id: 'cal', name: '캘린더', Component: CalendarWidget },
   { id: 'weatherL', name: '날씨 (대형)', Component: WeatherWidgetLarge },
+  { id: 'weatherS', name: '날씨 (소형)', Component: WeatherWidgetSmall },
   // ... 기타 위젯
 ];
 

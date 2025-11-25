@@ -1,16 +1,34 @@
 // src/components/pages/DashboardPage.jsx
 
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import SideMenu from './layout/SideMenu'; 
 
+import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
 import HomePage from './HomePage';
-import WidgetPage from './WidgetPage';
 import CanvasPage from './CanvasPage';
-import CanvasEditor from './CanvasEditor';  // 🎯 CanvasEditor import 추가!
+import CanvasEditor from './CanvasEditor';
 import SettingsPage from './SettingsPage';
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 로그인 체크
+  useEffect(() => {
+    const currentUser = localStorage.getItem('currentUser');
+    const publicPaths = ['/login', '/signup'];
+    
+    // 로그인되지 않았고, 공개 페이지가 아니면 로그인 페이지로
+    if (!currentUser && !publicPaths.includes(location.pathname)) {
+      navigate('/login');
+    }
+  }, [location.pathname, navigate]);
+
+  const currentUser = localStorage.getItem('currentUser');
+  const isPublicPage = ['/login', '/signup'].includes(location.pathname);
+
   return (
     <div className="dashboard-layout" style={{ 
         display: 'flex',
@@ -21,23 +39,27 @@ const DashboardPage = () => {
         overflow: 'hidden'
     }}>
       
-      {/* 1. SideMenu (고정된 왼쪽 메뉴) */}
-      <SideMenu />
+      {/* 로그인/회원가입 페이지가 아닐 때만 SideMenu 표시 */}
+      {currentUser && !isPublicPage && <SideMenu />}
       
-      {/* 2. Main Content (오른쪽 컨텐츠 영역) */}
+      {/* Main Content */}
       <div className="main-content" style={{ 
-          marginLeft: '265px',
-          width: 'calc(100vw - 265px)',
+          marginLeft: (currentUser && !isPublicPage) ? '265px' : '0',
+          width: (currentUser && !isPublicPage) ? 'calc(100vw - 265px)' : '100vw',
           height: '100vh',
           overflow: 'hidden',
           backgroundColor: '#f5f5f5',
           boxSizing: 'border-box'
       }}>
         <Routes>
+          {/* 공개 라우트 */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          
+          {/* 보호된 라우트 */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/widget" element={<WidgetPage />} />
           <Route path="/canvas" element={<CanvasPage />} />
-          <Route path="/canvas/edit/:canvasId" element={<CanvasEditor />} />  {/* 🎯 CanvasEditor 라우트 추가! */}
+          <Route path="/canvas/edit/:canvasId" element={<CanvasEditor />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<HomePage />} /> 
         </Routes>

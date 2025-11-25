@@ -7,24 +7,33 @@ const CanvasPage = () => {
   const navigate = useNavigate();
   const [savedCanvases, setSavedCanvases] = useState([]);
   const [activeCanvasId, setActiveCanvasId] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // 캔버스 목록 로드
+  // 캔버스 목록 로드 (사용자별)
   useEffect(() => {
-    loadCanvases();
-    const activeId = localStorage.getItem('activeCanvasId');
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    setCurrentUser(user);
+    loadUserCanvases(user.id);
+    
+    const activeId = localStorage.getItem(`activeCanvas_${user.id}`);
     setActiveCanvasId(activeId);
-  }, []);
+  }, [navigate]);
 
-  const loadCanvases = () => {
+  const loadUserCanvases = (userId) => {
     const canvases = [];
     const keys = Object.keys(localStorage);
     
+    // 해당 사용자의 캔버스만 로드
     keys.forEach(key => {
-      if (key.startsWith('canvas_')) {
+      if (key.startsWith(`canvas_${userId}_`)) {
         try {
           const canvasData = JSON.parse(localStorage.getItem(key));
           canvases.push({
-            id: key.replace('canvas_', ''),
+            id: key.replace(`canvas_${userId}_`, ''),
             ...canvasData
           });
         } catch (e) {
@@ -41,16 +50,16 @@ const CanvasPage = () => {
   const handleCreateCanvas = () => {
     const newId = Date.now().toString();
     const newCanvas = {
-      name: `개인 작업공간 ${savedCanvases.length + 1}`,
+      name: `작업공간 ${savedCanvases.length + 1}`,
       createdAt: new Date().toISOString(),
       layout: []
     };
     
-    localStorage.setItem(`canvas_${newId}`, JSON.stringify(newCanvas));
+    localStorage.setItem(`canvas_${currentUser.id}_${newId}`, JSON.stringify(newCanvas));
     
     // 첫 캔버스면 자동으로 활성화
     if (savedCanvases.length === 0) {
-      localStorage.setItem('activeCanvasId', newId);
+      localStorage.setItem(`activeCanvas_${currentUser.id}`, newId);
       setActiveCanvasId(newId);
       window.dispatchEvent(new Event('canvasChanged'));
     }
@@ -66,10 +75,9 @@ const CanvasPage = () => {
   // 캔버스 활성화 (HomePage에 표시)
   const handleActivateCanvas = (e, id) => {
     e.stopPropagation();
-    localStorage.setItem('activeCanvasId', id);
+    localStorage.setItem(`activeCanvas_${currentUser.id}`, id);
     setActiveCanvasId(id);
     
-    // HomePage 업데이트를 위한 이벤트 발생
     window.dispatchEvent(new Event('canvasChanged'));
     
     alert('이 캔버스가 홈 화면에 활성화되었습니다!');
@@ -80,23 +88,27 @@ const CanvasPage = () => {
     e.stopPropagation();
     const confirmed = window.confirm('이 캔버스를 삭제하시겠습니까?');
     if (confirmed) {
-      localStorage.removeItem(`canvas_${id}`);
+      localStorage.removeItem(`canvas_${currentUser.id}_${id}`);
       
       // 활성 캔버스를 삭제한 경우
       if (activeCanvasId === id) {
-        localStorage.removeItem('activeCanvasId');
+        localStorage.removeItem(`activeCanvas_${currentUser.id}`);
         setActiveCanvasId(null);
         window.dispatchEvent(new Event('canvasChanged'));
       }
       
-      loadCanvases();
+      loadUserCanvases(currentUser.id);
     }
   };
+
+  if (!currentUser) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className="canvas-page-container">
       <div className="canvas-page-header">
-        <h1>🎨 개인 맞춤형 캔버스</h1>
+        <h1>🎨 {currentUser.nickname}님의 캔버스</h1>
         <button className="create-canvas-btn" onClick={handleCreateCanvas}>
           + 새 캔버스 만들기
         </button>

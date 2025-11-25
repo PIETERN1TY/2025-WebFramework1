@@ -1,47 +1,49 @@
-// src/components/widgets/NewsWidgetLarge.jsx
+// src/components/widget/Basic/news/NewsWidgetLarge.jsx
 
 import React, { useState, useEffect } from 'react';
 import './NewsWidget.css';
-import { FaChevronDown } from 'react-icons/fa';
 
 // 🔑 API Key
 const NEWS_API_KEY = "e901566ca28a42668180928540235c01";
 
-// 📰 카테고리 목록 - 한국은 '전체'만 사용 (카테고리별 뉴스가 부족함)
-const CATEGORIES = {
-    '전체': { country: 'kr', category: null },
-    '미국': { country: 'us', category: null },
-    '미국-기술': { country: 'us', category: 'technology' },
-    '미국-경제': { country: 'us', category: 'business' },
-    '미국-스포츠': { country: 'us', category: 'sports' },
-    '일본': { country: 'jp', category: null }
-};
+// 📰 탭 카테고리 목록
+const TABS = [
+    { id: 'all', name: '전체', query: null },
+    { id: 'politics', name: '정치', query: '정치' },
+    { id: 'economy', name: '경제', query: '경제' },
+    { id: 'entertainment', name: '연예', query: '연예' },
+    { id: 'health', name: '건강', query: '건강' },
+    { id: 'sports', name: '스포츠', query: '스포츠' },
+    { id: 'entertainment2', name: '엔터', query: '엔터테인먼트' }
+];
 
 const NewsWidgetLarge = () => {
     const [articles, setArticles] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState('전체');
+    const [activeTab, setActiveTab] = useState('all');
 
-    // 데이터 패치 로직
+    // 뉴스 데이터 가져오기
     useEffect(() => {
         const fetchNews = async () => {
             setIsLoading(true);
             setError(null);
             
             try {
-                const { country, category } = CATEGORIES[selectedCategory];
-                let apiUrl = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${NEWS_API_KEY}`;
+                const currentTab = TABS.find(tab => tab.id === activeTab);
+                let apiUrl;
                 
-                if (category) {
-                    apiUrl += `&category=${category}`;
+                if (currentTab.query) {
+                    // 특정 키워드로 한국 뉴스 검색
+                    apiUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(currentTab.query)}&language=ko&sortBy=publishedAt&apiKey=${NEWS_API_KEY}`;
+                } else {
+                    // 전체 한국 헤드라인 뉴스
+                    apiUrl = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${NEWS_API_KEY}`;
                 }
 
                 console.log('🔍 API 요청 URL:', apiUrl);
                 
                 const response = await fetch(apiUrl);
-                
-                console.log('📡 응답 상태:', response.status);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,10 +62,14 @@ const NewsWidgetLarge = () => {
                     setArticles([]);
                     setError('해당 카테고리의 뉴스가 없습니다.');
                 } else {
-                    // 제목이 있는 기사만 필터링
+                    // 제목이 있고 유효한 기사만 필터링 (최대 4개)
                     const validArticles = data.articles
-                        .filter(article => article.title && article.title !== '[Removed]')
-                        .slice(0, 5);
+                        .filter(article => 
+                            article.title && 
+                            article.title !== '[Removed]' &&
+                            !article.title.includes('[removed]')
+                        )
+                        .slice(0, 4);
                     
                     setArticles(validArticles);
                     
@@ -80,61 +86,66 @@ const NewsWidgetLarge = () => {
         };
 
         fetchNews();
-    }, [selectedCategory]);
+    }, [activeTab]);
+
+    // 탭 클릭 핸들러
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
 
     if (isLoading) {
         return (
             <div className="news-widget news-large">
-                <div className="news-large-header">
-                    <p className="news-large-title">이 시각 주요 뉴스</p>
+                <div className="news-tabs">
+                    {TABS.map(tab => (
+                        <button
+                            key={tab.id}
+                            className={`news-tab ${activeTab === tab.id ? 'active' : ''}`}
+                        >
+                            {tab.name}
+                        </button>
+                    ))}
                 </div>
-                <p style={{ marginTop: '10px', color: '#999' }}>뉴스 로딩 중...</p>
+                <p className="news-loading">뉴스 로딩 중...</p>
             </div>
         );
     }
 
     return (
         <div className="news-widget news-large">
-            <div className="news-large-header">
-                <p className="news-large-title">이 시각 주요 뉴스</p>
-                
-                <div className="news-category-dropdown-wrapper">
-                    <select 
-                        value={selectedCategory} 
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="news-category-select"
+            {/* 탭 메뉴 */}
+            <div className="news-tabs">
+                {TABS.map(tab => (
+                    <button
+                        key={tab.id}
+                        className={`news-tab ${activeTab === tab.id ? 'active' : ''}`}
+                        onClick={() => handleTabClick(tab.id)}
                     >
-                        {Object.keys(CATEGORIES).map(name => (
-                            <option key={name} value={name}>
-                                {name}
-                            </option>
-                        ))}
-                    </select>
-                    <FaChevronDown size={8} className="dropdown-icon" />
-                </div>
+                        {tab.name}
+                    </button>
+                ))}
             </div>
             
+            {/* 에러 메시지 */}
             {error && articles.length === 0 && (
-                <p style={{ color: '#ff6b6b', fontSize: '0.9em', marginTop: '10px' }}>
-                    {error}
-                </p>
+                <p className="news-error">{error}</p>
             )}
             
-            <ul className="news-list" style={{ marginTop: '10px' }}>
+            {/* 뉴스 목록 */}
+            <ul className="news-list">
                 {articles.length > 0 ? (
                     articles.map((article, index) => (
                         <li 
                             key={index} 
-                            className="news-item news-single-line-ellipsis"
+                            className="news-item"
                             onClick={() => article.url && window.open(article.url, '_blank')}
-                            style={{ cursor: article.url ? 'pointer' : 'default' }}
                             title={article.title}
                         >
                             {article.title}
                         </li>
                     ))
                 ) : (
-                    <li className="news-item" style={{ color: '#999' }}>
+                    <li className="news-item news-empty">
                         현재 표시할 뉴스가 없습니다.
                     </li>
                 )}

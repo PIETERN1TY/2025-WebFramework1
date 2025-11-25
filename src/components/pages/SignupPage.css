@@ -1,0 +1,193 @@
+/* src/components/pages/SignupPage.css */
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+  }
+  
+  .signup-box {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .signup-title {
+    font-size: 2em;
+    color: #333;
+    margin: 0 0 10px 0;
+    text-align: center;
+  }
+  
+  .signup-subtitle {
+    font-size: 1em;
+    color: #666;
+    text-align: center;
+    margin: 0 0 40px 0;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-input {
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+  
+  /* 프로필 이미지 업로드 */
+  .profile-image-group {
+    align-items: center;
+  }
+  
+  .profile-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .profile-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+  }
+  
+  .profile-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .profile-placeholder {
+    text-align: center;
+    color: #999;
+  }
+  
+  .profile-placeholder span {
+    font-size: 3em;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .profile-placeholder p {
+    margin: 0;
+    font-size: 0.9em;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  .file-input-label {
+    background-color: #667eea;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  
+  .file-input-label:hover {
+    background-color: #5568d3;
+    transform: translateY(-2px);
+  }
+  
+  .error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin: -10px 0 0 0;
+    text-align: center;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .signup-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+  }
+  
+  .signup-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .signup-button:active {
+    transform: translateY(0);
+  }
+  
+  .signup-footer {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .signup-footer p {
+    color: #666;
+    margin: 0 0 10px 0;
+    font-size: 0.95em;
+  }
+  
+  .login-link {
+    background: none;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .login-link:hover {
+    background: #667eea;
+    color: white;
+  }

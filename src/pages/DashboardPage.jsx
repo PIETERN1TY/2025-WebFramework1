@@ -33,7 +33,7 @@ const DashboardPage = () => {
       document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
       document.documentElement.style.setProperty('--theme-gradient', theme.gradient);
       
-      console.log(`✅ 테마 적용: ${theme.id}`, theme);
+      console.log(`테마 적용: ${theme.id}`, theme);
     };
 
     // 테마 초기화
@@ -42,10 +42,10 @@ const DashboardPage = () => {
       if (currentUser) {
         const savedTheme = localStorage.getItem(`theme_${currentUser.id}`) || 'blue';
         applyTheme(savedTheme);
-        console.log(`🎨 사용자 테마 로드: ${savedTheme}`);
+        console.log(`사용자 테마 로드: ${savedTheme}`);
       } else {
         applyTheme('blue');
-        console.log('🎨 기본 테마 적용: blue');
+        console.log('기본 테마 적용: blue');
       }
     };
 
@@ -54,7 +54,7 @@ const DashboardPage = () => {
 
     // 테마 변경 이벤트 리스너
     const handleThemeChange = () => {
-      console.log('🔄 테마 변경 이벤트 감지');
+      console.log('테마 변경 이벤트 감지');
       initTheme();
     };
 
@@ -76,10 +76,10 @@ const DashboardPage = () => {
         overflow: 'hidden'
     }}>
       
-      {/* 1. SideMenu (고정된 왼쪽 메뉴) */}
+      {/* 1. SideMenu */}
       <SideMenu />
       
-      {/* 2. Main Content (오른쪽 컨텐츠 영역) */}
+      {/* 2. Main Content */}
       <div className="main-content" style={{ 
           marginLeft: '265px',
           width: 'calc(100vw - 265px)',
@@ -89,17 +89,13 @@ const DashboardPage = () => {
           boxSizing: 'border-box'
       }}>
         <Routes>
-          {/* 기본 경로 */}
           <Route path="/" element={<HomePage />} />
           
-          {/* Canvas 관련 */}
           <Route path="/canvas" element={<CanvasPage />} />
           <Route path="/canvas/edit/:canvasId" element={<Canvaseditor />} />
           
-          {/* Settings */}
           <Route path="/settings" element={<SettingsPage />} />
           
-          {/* 기타 경로 - HomePage로 */}
           <Route path="*" element={<HomePage />} /> 
         </Routes>
       </div>

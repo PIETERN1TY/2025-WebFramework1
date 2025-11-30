@@ -1,12 +1,12 @@
 // src/components/pages/CanvasEditor.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import GridLayout from 'react-grid-layout';
-import { WIDGET_OPTIONS } from '../../config/WidgetConfig';  // ✅
+import { WIDGET_OPTIONS } from '../../config/WidgetConfig';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import './CanvasEditor.css';
 
 const CanvasEditor = () => {
     const { canvasId } = useParams();
@@ -146,7 +146,7 @@ const CanvasEditor = () => {
 
     if (!canvasData || !currentUser) {
         return (
-            <div className="canvas-editor-loading">
+            <div className="flex items-center justify-center h-full text-2xl text-gray-600">
                 <p>캔버스 로딩 중...</p>
             </div>
         );
@@ -161,17 +161,21 @@ const CanvasEditor = () => {
     );
 
     return (
-        <div className="canvas-editor-container">
-            <div className="canvas-editor-header">
-                <button className="back-button" onClick={handleBack}>
+        <div className="w-full h-full flex flex-col p-5 box-border overflow-hidden">
+            {/* 헤더 */}
+            <div className="flex justify-between items-center mb-5 flex-shrink-0">
+                <button 
+                    className="bg-gray-600 hover:bg-gray-700 text-white border-none px-5 py-2.5 rounded-lg cursor-pointer text-base font-semibold transition-all duration-200"
+                    onClick={handleBack}
+                >
                     ← 캔버스 목록
                 </button>
                 
-                <div className="canvas-name-section">
+                <div className="flex-1 text-center">
                     {isEditingName ? (
                         <input
                             type="text"
-                            className="canvas-name-input"
+                            className="text-[1.8em] px-4 py-1.5 border-2 border-blue-600 rounded-lg text-center min-w-[300px]"
                             value={canvasName}
                             onChange={handleNameChange}
                             onBlur={handleNameBlur}
@@ -180,7 +184,7 @@ const CanvasEditor = () => {
                         />
                     ) : (
                         <h2 
-                            className="canvas-name-title"
+                            className="m-0 text-[1.8em] text-gray-800 cursor-pointer inline-block px-4 py-1.5 rounded-lg transition-colors duration-200 hover:bg-gray-100"
                             onClick={() => setIsEditingName(true)}
                         >
                             {canvasName} ✏️
@@ -188,19 +192,24 @@ const CanvasEditor = () => {
                     )}
                 </div>
 
-                <button className="save-button" onClick={handleSave}>
+                <button 
+                    className="bg-green-600 hover:bg-green-700 text-white border-none px-6 py-3 rounded-lg cursor-pointer text-base font-semibold transition-all duration-200"
+                    onClick={handleSave}
+                >
                     💾 저장
                 </button>
             </div>
 
-            <div className="canvas-editor-content">
+            {/* 콘텐츠 영역 */}
+            <div className="flex gap-5 flex-1 overflow-hidden min-h-0">
+                {/* 캔버스 드롭 영역 */}
                 <div 
-                    className="canvas-drop-area"
+                    className="w-[1200px] h-[840px] bg-[#d1eaff] rounded-2xl p-2.5 shadow-[0_5px_15px_rgba(0,0,0,0.1)] relative overflow-hidden flex-shrink-0"
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                 >
                     <GridLayout
-                        className="canvas-grid-layout"
+                        className="canvas-grid-layout w-full h-full"
                         layout={currentLayout}
                         cols={12}
                         rowHeight={100}
@@ -214,50 +223,83 @@ const CanvasEditor = () => {
                         preventCollision={true}
                     >
                         {widgetsToRender.map(widget => (
-                            <div key={widget.id} className="canvas-widget-wrapper">
+                            <div 
+                                key={widget.id} 
+                                className="bg-white border-2 border-gray-300 rounded-xl shadow-sm transition-all duration-200 relative overflow-hidden w-full h-full p-1.5 box-border hover:shadow-lg hover:border-blue-600 group"
+                            >
                                 <button 
-                                    className="widget-remove-btn"
+                                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-red-600 hover:bg-red-700 text-white border-none cursor-pointer text-lg leading-none z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
                                     onClick={(e) => handleRemoveWidget(e, widget.id)}
                                     onMouseDown={(e) => e.stopPropagation()}
                                     title="위젯 삭제"
                                 >
                                     ✕
                                 </button>
-                                <widget.Component />
+                                <div className="w-full h-full">
+                                    <widget.Component />
+                                </div>
                             </div>
                         ))}
                     </GridLayout>
 
                     {currentLayout.length === 0 && (
-                        <div className="empty-canvas-hint">
-                            <p>👉 오른쪽 위젯 목록에서 위젯을 드래그하여 배치하세요</p>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-[1]">
+                            <p className="text-xl text-gray-600 bg-white/90 px-8 py-5 rounded-xl border-2 border-dashed border-gray-400 m-0">
+                                👉 오른쪽 위젯 목록에서 위젯을 드래그하여 배치하세요
+                            </p>
                         </div>
                     )}
                 </div>
 
-                <div className="widget-palette">
-                    <h3>위젯 목록</h3>
-                    <div className="widget-palette-scroll">
+                {/* 위젯 팔레트 */}
+                <div className="w-[280px] flex-shrink-0 flex flex-col bg-gray-50 rounded-xl border border-gray-300 overflow-hidden">
+                    <h3 className="m-0 px-5 py-5 text-xl text-gray-800 border-b-2 border-gray-300 bg-white">
+                        위젯 목록
+                    </h3>
+                    
+                    <div className="flex-1 overflow-y-auto p-4">
                         {availableWidgets.length > 0 ? (
-                            <div className="widget-list">
+                            <div className="flex flex-col gap-3">
                                 {availableWidgets.map(widget => (
                                     <div
                                         key={widget.id}
-                                        className="widget-palette-item"
+                                        className="flex items-center gap-3 px-3.5 py-3.5 bg-white border-2 border-gray-300 rounded-lg cursor-move transition-all duration-200 select-none hover:bg-blue-50 hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing active:scale-95"
                                         draggable
                                         onDragStart={(e) => handleDragStart(e, widget)}
                                     >
-                                        <span className="widget-icon">📦</span>
-                                        <span className="widget-name">{widget.name}</span>
+                                        <span className="text-3xl">📦</span>
+                                        <span className="font-medium text-gray-800 text-base">
+                                            {widget.name}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="no-widgets-message">모든 위젯이 배치되었습니다</p>
+                            <p className="text-center text-gray-400 italic py-5 bg-white/50 rounded-lg">
+                                모든 위젯이 배치되었습니다
+                            </p>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* GridLayout 리사이즈 핸들 스타일 */}
+            <style jsx>{`
+                .canvas-grid-layout .react-resizable-handle {
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 6" width="6" height="6"><path d="M6 6H4L6 4Z" fill="%23007bff"/></svg>');
+                    background-position: bottom right;
+                    padding: 0 3px 3px 0;
+                    background-repeat: no-repeat;
+                    background-origin: content-box;
+                    cursor: se-resize;
+                    opacity: 0;
+                    transition: opacity 0.2s;
+                }
+
+                .group:hover .react-resizable-handle {
+                    opacity: 1;
+                }
+            `}</style>
         </div>
     );
 };

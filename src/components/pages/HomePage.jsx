@@ -1,12 +1,12 @@
 // src/components/pages/HomePage.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GridLayout from 'react-grid-layout';
-import { WIDGET_OPTIONS } from '../../config/WidgetConfig';  // ✅
+import { WIDGET_OPTIONS } from '../../config/WidgetConfig';
+
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import './HomePage.css';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -52,37 +52,53 @@ const HomePage = () => {
     };
 
     // 현재 레이아웃에 포함된 위젯만 렌더링
-    const widgetsToRender = WIDGET_OPTIONS.filter(option => 
-        layout.some(item => item.i === option.id)
-    );
+    const widgetsToRender = useMemo(() => {
+        return WIDGET_OPTIONS.filter(option => 
+            layout.some(item => item.i === option.id)
+        );
+    }, [layout]);
 
-    // 위젯 컴포넌트 맵 생성
-    const widgetComponentMap = widgetsToRender.reduce((map, widget) => {
-        map[widget.id] = widget.Component;
-        return map;
-    }, {});
+    // 위젯 컴포넌트 맵 생성 (최적화)
+    const widgetComponentMap = useMemo(() => {
+        return widgetsToRender.reduce((map, widget) => {
+            map[widget.id] = widget.Component;
+            return map;
+        }, {});
+    }, [widgetsToRender]);
 
-    const layoutWidth = 1180;
+    const layoutWidth = 1180; 
 
     if (!currentUser) {
-        return <div>로딩 중...</div>;
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="text-lg text-gray-600">대시보드 로딩 중...</div>
+            </div>
+        );
     }
 
     return (
-        <div className="home-page-container">
-            <div className="home-page-header">
-                <h1 className="dashboard-title">🧩 {currentUser.nickname}님의 대시보드</h1>
+        <div className="w-full h-full p-5 box-border overflow-hidden flex flex-col relative">
+            
+            <div className="flex justify-between items-center mb-6 flex-shrink-0">
+                {/* .dashboard-title */}
+                <h1 className="text-[1.8em] text-gray-800 m-0">
+                    {currentUser.nickname}님의 대시보드
+                </h1>
+                
                 {activeCanvas && (
-                    <div className="active-canvas-info">
-                        <span className="canvas-badge">📋 {activeCanvas.name}</span>
+                    <div className="flex items-center">
+                        {/* .canvas-badge */}
+                        <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                            {activeCanvas.name}
+                        </span>
                     </div>
                 )}
             </div>
             
             {layout.length > 0 ? (
-                <div className="widget-grid-area">
+                <div className="w-[1200px] h-[840px] bg-[#d1eaff] rounded-2xl p-2.5 shadow-[0_5px_15px_rgba(0,0,0,0.1)] overflow-hidden flex-shrink-0">
                     <GridLayout
-                        className="rgl-layout"
+                        className="w-full h-full"
                         layout={layout}
                         cols={12}
                         rowHeight={100}
@@ -99,23 +115,23 @@ const HomePage = () => {
                             if (!WidgetComponent) return null;
 
                             return (
-                                <div key={item.i} className="widget-item-wrapper">
-                                    <WidgetComponent />
+                                <div key={item.i} className="w-full h-full p-1.5 box-border">
+                                    <div className="w-full h-full">
+                                        <WidgetComponent />
+                                    </div>
                                 </div>
                             );
                         })}
                     </GridLayout>
                 </div>
             ) : (
-                <div className="empty-home-message">
-                    <p>📋 아직 활성화된 캔버스가 없습니다.</p>
-                    <p>CANVAS 메뉴에서 새 캔버스를 만들고 활성화하세요!</p>
-                    <button 
-                        className="go-to-canvas-button"
-                        onClick={() => navigate('/canvas')}
-                    >
-                        🎨 캔버스 만들러 가기
-                    </button>
+                <div className="flex flex-col items-center justify-center h-[400px] text-center">
+                    <p className="text-[1.8em] font-semibold text-gray-800 my-2.5">
+                        아직 활성화된 캔버스가 없습니다.
+                    </p>
+                    <p className="text-xl text-gray-600 my-2.5">
+                        CANVAS 메뉴에서 새 캔버스를 만들고 활성화하세요!
+                    </p>
                 </div>
             )}
         </div>

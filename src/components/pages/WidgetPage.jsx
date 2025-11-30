@@ -4,10 +4,8 @@ import React, { useState } from 'react';
 import GridLayout from 'react-grid-layout';
 import { WIDGET_OPTIONS, INITIAL_LAYOUT } from '../../App.jsx';
 
-// 필수 CSS import
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import './WidgetPage.css';
 
 // 저장 함수
 const saveLayout = (layout) => {
@@ -16,40 +14,33 @@ const saveLayout = (layout) => {
 };
 
 const WidgetPage = () => {
-    // 저장된 레이아웃을 불러오거나 초기 레이아웃 사용
     const savedLayout = localStorage.getItem('userLayout');
     const initialLayout = savedLayout ? JSON.parse(savedLayout) : INITIAL_LAYOUT;
 
     const [currentLayout, setCurrentLayout] = useState(initialLayout);
     const [draggedWidget, setDraggedWidget] = useState(null);
     
-    // 고정 너비 (패딩 20px 제외)
-    const layoutWidth = 984; // 1004 - 20 = 984
+    const layoutWidth = 984;
 
-    // 레이아웃 변경 핸들러
     const handleLayoutChange = (newLayout) => {
         setCurrentLayout(newLayout);
     };
 
-    // "저장" 버튼 클릭 핸들러
     const handleSave = () => {
         saveLayout(currentLayout);
         alert("위젯 배치가 홈 화면에 저장되었습니다!");
     };
 
-    // 위젯 목록에서 드래그 시작
     const handleDragStart = (e, widget) => {
         setDraggedWidget(widget);
         e.dataTransfer.effectAllowed = 'move';
     };
 
-    // 캔버스에 드롭 처리
     const handleDrop = (e) => {
         e.preventDefault();
         
         if (!draggedWidget) return;
 
-        // 이미 배치된 위젯인지 확인
         const alreadyPlaced = currentLayout.some(item => item.i === draggedWidget.id);
         if (alreadyPlaced) {
             alert('이미 배치된 위젯입니다!');
@@ -57,7 +48,6 @@ const WidgetPage = () => {
             return;
         }
 
-        // 캔버스 영역의 위치 계산
         const canvas = e.currentTarget.querySelector('.rgl-layout');
         if (!canvas) return;
         
@@ -65,13 +55,11 @@ const WidgetPage = () => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // 그리드 좌표로 변환
         const colWidth = layoutWidth / 12;
         const rowHeight = 83;
         const gridX = Math.floor(x / colWidth);
         const gridY = Math.floor(y / rowHeight);
 
-        // 새 위젯 추가
         const newItem = {
             i: draggedWidget.id,
             x: Math.min(Math.max(gridX, 0), 10),
@@ -89,7 +77,6 @@ const WidgetPage = () => {
         e.dataTransfer.dropEffect = 'move';
     };
 
-    // 위젯 삭제
     const handleRemoveWidget = (e, widgetId) => {
         e.stopPropagation();
         const confirmed = window.confirm('이 위젯을 삭제하시겠습니까?');
@@ -98,34 +85,37 @@ const WidgetPage = () => {
         }
     };
 
-    // 현재 레이아웃에 포함된 위젯 컴포넌트만 필터링
     const widgetsToRender = WIDGET_OPTIONS.filter(option => 
         currentLayout.some(item => item.i === option.id)
     );
 
-    // 아직 배치되지 않은 위젯 목록
     const availableWidgets = WIDGET_OPTIONS.filter(option =>
         !currentLayout.some(item => item.i === option.id)
     );
 
     return (
-        <div className="widget-page-container">
-            <div className="widget-page-header">
-                <h2>위젯 배치 설정</h2>
-                <button className="save-button" onClick={handleSave}>
+        <div className="w-full h-full flex flex-col p-5 box-border overflow-hidden">
+            {/* Header */}
+            <div className="w-full flex justify-between items-center mb-5 flex-shrink-0">
+                <h2 className="m-0 text-[1.8em] text-gray-800">위젯 배치 설정</h2>
+                <button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-none px-6 py-3 rounded-lg cursor-pointer text-base font-semibold transition-colors duration-200"
+                    onClick={handleSave}
+                >
                     저장 (홈 화면에 반영)
                 </button>
             </div>
 
-            <div className="widget-page-content">
-                {/* 위젯을 배치할 중앙 캔버스 */}
+            {/* Content */}
+            <div className="flex gap-5 flex-1 overflow-hidden min-h-0">
+                {/* Canvas */}
                 <div 
-                    className="layout-canvas"
+                    className="w-[1004px] h-[703px] bg-[#d1eaff] rounded-2xl p-2.5 shadow-[0_5px_15px_rgba(0,0,0,0.1)] relative overflow-hidden flex-shrink-0"
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                 >
                     <GridLayout
-                        className="rgl-layout"
+                        className="rgl-layout w-full h-full"
                         layout={currentLayout}
                         cols={12}
                         rowHeight={83}
@@ -139,10 +129,9 @@ const WidgetPage = () => {
                         preventCollision={true}
                     >
                         {widgetsToRender.map(widget => (
-                            <div key={widget.id} className="widget-item-wrapper">
-                                {/* 삭제 버튼 */}
+                            <div key={widget.id} className="bg-white border-2 border-gray-300 rounded-xl shadow-sm transition-shadow duration-200 relative overflow-hidden w-full h-full p-1.5 box-border hover:shadow-lg hover:border-blue-600 group">
                                 <button 
-                                    className="widget-remove-btn"
+                                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-red-600 hover:bg-red-700 text-white border-none cursor-pointer text-lg leading-none z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-95"
                                     onClick={(e) => handleRemoveWidget(e, widget.id)}
                                     onMouseDown={(e) => e.stopPropagation()}
                                     onTouchStart={(e) => e.stopPropagation()}
@@ -150,41 +139,55 @@ const WidgetPage = () => {
                                 >
                                     ✕
                                 </button>
-                                {/* 위젯 컴포넌트 */}
-                                <widget.Component />
+                                <div className="w-full h-full">
+                                    <widget.Component />
+                                </div>
                             </div>
                         ))}
                     </GridLayout>
 
                     {currentLayout.length === 0 && (
-                        <div className="empty-canvas-message">
-                            <p>👉 오른쪽 위젯 목록에서 위젯을 드래그하여 여기에 배치하세요</p>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-gray-600 text-xl z-[1]">
+                            <p className="m-0 p-5 bg-white/80 rounded-xl border-2 border-dashed border-gray-400">
+                                👉 오른쪽 위젯 목록에서 위젯을 드래그하여 여기에 배치하세요
+                            </p>
                         </div>
                     )}
                 </div>
                 
-                {/* 위젯 목록 (드래그 가능한 위젯들) */}
-                <div className="widget-palette">
-                    <h3>위젯 목록</h3>
+                <div className="w-[280px] flex-shrink-0 p-5 border border-gray-300 rounded-xl bg-gray-50 overflow-y-auto max-h-full">
+                    <h3 className="mt-0 text-xl text-gray-800 border-b-2 border-gray-300 pb-2.5 mb-4">위젯 목록</h3>
                     {availableWidgets.length > 0 ? (
-                        <div className="widget-list">
+                        <div className="flex flex-col gap-2.5">
                             {availableWidgets.map(widget => (
                                 <div
                                     key={widget.id}
-                                    className="widget-palette-item"
+                                    className="flex items-center gap-2.5 px-3 py-3 bg-white border-2 border-gray-300 rounded-lg cursor-move transition-all duration-200 select-none hover:bg-blue-50 hover:border-blue-600 hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing active:scale-95"
                                     draggable
                                     onDragStart={(e) => handleDragStart(e, widget)}
                                 >
-                                    <span className="widget-icon">📦</span>
-                                    <span className="widget-name">{widget.name}</span>
+                                    <span className="text-2xl">📦</span>
+                                    <span className="font-medium text-gray-800">{widget.name}</span>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="no-widgets-message">모든 위젯이 배치되었습니다</p>
+                        <p className="text-center text-gray-400 italic mt-5">모든 위젯이 배치되었습니다</p>
                     )}
                 </div>
             </div>
+
+            <style jsx>{`
+                .rgl-layout .react-resizable-handle {
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 6" width="6" height="6"><path d="M6 6H4L6 4Z" fill="%23888"/></svg>');
+                    background-position: bottom right;
+                    padding: 0 3px 3px 0;
+                    background-repeat: no-repeat;
+                    background-origin: content-box;
+                    cursor: se-resize;
+                    opacity: 0.7;
+                }
+            `}</style>
         </div>
     );
 };

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SettingsPage.css';
 
 // 테마 색상 옵션
 const THEME_COLORS = [
@@ -158,28 +157,35 @@ const SettingsPage = () => {
   };
 
   if (!currentUser) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className="text-center p-10">로딩 중...</div>
+    );
   }
 
   const hasPassword = !!currentUser.password;
 
   return (
-    <div className="settings-container">
-      <div className="settings-header">
-        <h1 className="settings-title">설정</h1>
+    <div className="p-8 max-w-[1200px] mx-auto text-gray-800 bg-gray-100 min-h-screen">
+      <div className="flex justify-between items-center">
+        <h1 className="text-[1.8em] font-normal mb-2.5 pb-1.5">설정</h1>
       </div>
-      <hr className="settings-divider" />
+      
+      <hr className="border-none border-t border-gray-300 mb-8" />
 
-      <div className="settings-content-wrapper">
-        <div className="settings-left-panel">
+      <div className="flex justify-between gap-12 md:flex-row flex-col">
+        
+        <div className="flex-[3] flex flex-col">
+          
           {/* 닉네임 설정 */}
-          <div className="setting-group">
-            <label htmlFor="nickname" className="setting-label">닉네임</label>
+          <div className="mb-8">
+            <label htmlFor="nickname" className="block text-sm text-gray-600 mb-2.5 font-bold">
+              닉네임
+            </label>
             <input 
               type="text" 
               id="nickname"
               name="nickname"
-              className="setting-input" 
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder="닉네임을 입력하세요" 
               value={formData.nickname}
               onChange={handleInputChange}
@@ -187,13 +193,15 @@ const SettingsPage = () => {
           </div>
 
           {/* 이메일 설정 */}
-          <div className="setting-group">
-            <label htmlFor="email" className="setting-label">이메일</label>
+          <div className="mb-8">
+            <label htmlFor="email" className="block text-sm text-gray-600 mb-2.5 font-bold">
+              이메일
+            </label>
             <input 
               type="email" 
               id="email"
               name="email"
-              className="setting-input" 
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder="email@example.com" 
               value={formData.email}
               onChange={handleInputChange}
@@ -201,35 +209,32 @@ const SettingsPage = () => {
           </div>
 
           {/* 비밀번호 설정 */}
-          <div className="setting-group">
-            <label htmlFor="password" className="setting-label">
+          <div className="mb-8">
+            <label htmlFor="password" className="block text-sm text-gray-600 mb-2.5 font-bold">
               {hasPassword ? '새 비밀번호' : '비밀번호 설정'} (선택)
             </label>
             <input 
               type="password" 
               id="password"
               name="password"
-              className="setting-input" 
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder={hasPassword ? "새 비밀번호 (최소 6자)" : "비밀번호 설정 (최소 6자)"}
               value={formData.password}
               onChange={handleInputChange}
             />
-            {!hasPassword && (
-              <p className="setting-hint">
-                * 현재 비밀번호가 설정되어 있지 않습니다. 보안을 위해 비밀번호를 설정해주세요.
-              </p>
-            )}
           </div>
 
           {/* 비밀번호 확인 */}
           {(formData.password || formData.confirmPassword) && (
-            <div className="setting-group">
-              <label htmlFor="confirmPassword" className="setting-label">비밀번호 확인</label>
+            <div className="mb-8">
+              <label htmlFor="confirmPassword" className="block text-sm text-gray-600 mb-2.5 font-bold">
+                비밀번호 확인
+              </label>
               <input 
                 type="password" 
                 id="confirmPassword"
                 name="confirmPassword"
-                className="setting-input" 
+                className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
                 placeholder="비밀번호를 다시 입력하세요" 
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
@@ -238,45 +243,77 @@ const SettingsPage = () => {
           )}
 
           {/* 테마 색상 선택 */}
-          <div className="setting-group">
-            <label className="setting-label">테마 색상</label>
-            <div className="color-palette">
+          <div className="mb-8">
+            <label className="block text-sm text-gray-600 mb-2.5 font-bold">
+              테마 색상
+            </label>
+            <div className="flex gap-3 mt-2.5 flex-wrap">
               {THEME_COLORS.map(theme => (
                 <div
                   key={theme.id}
-                  className={`color-option ${selectedTheme === theme.id ? 'active' : ''}`}
+                  className={`w-11 h-11 rounded-full cursor-pointer border-4 border-transparent transition-all duration-200 relative hover:scale-110 hover:shadow-lg ${
+                    selectedTheme === theme.id 
+                      ? 'border-gray-800 shadow-[0_0_0_4px_rgba(51,51,51,0.2)] scale-[1.15]' 
+                      : ''
+                  }`}
                   style={{ background: theme.gradient }}
                   onClick={() => handleThemeChange(theme.id)}
                   title={theme.name}
-                />
+                >
+                  {selectedTheme === theme.id && (
+                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl font-bold" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                      ✓
+                    </span>
+                  )}
+                </div>
               ))}
             </div>
           </div>
 
           {/* 저장 버튼 */}
-          <button className="save-button" onClick={handleSave}>
+          <button 
+            className="px-6 py-3 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 mt-5 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
+            style={{
+              background: 'var(--theme-gradient, linear-gradient(135deg, #2563eb 0%, #3b82f6 100%))'
+            }}
+            onClick={handleSave}
+          >
             변경사항 저장
           </button>
         </div>
 
-        {/* 오른쪽 프로필 사진 영역 */}
-        <div className="settings-right-panel">
-          <p className="profile-image-label">프로필 사진</p>
-          <div className="profile-image-display-wrapper">
+        <div className="flex-[2] flex flex-col items-center justify-start">
+          <p className="text-sm text-gray-600 mb-4 font-bold text-center">
+            프로필 사진
+          </p>
+          
+          <div className="w-[200px] h-[200px] rounded-full overflow-hidden shadow-lg transition-all duration-300 mb-5 hover:scale-105 hover:shadow-xl"
+            style={{
+              border: '4px solid var(--theme-secondary, #4a90e2)'
+            }}
+          >
             <img 
               src={profilePreview || 'src/assets/images/toro.jpg'}
               alt="프로필 사진" 
-              className="profile-image-display" 
+              className="w-full h-full object-cover"
             />
           </div>
+          
           <input
             type="file"
             id="profileImageInput"
             accept="image/*"
             onChange={handleImageChange}
-            className="file-input-hidden"
+            className="hidden"
           />
-          <label htmlFor="profileImageInput" className="change-image-button">
+          
+          <label 
+            htmlFor="profileImageInput" 
+            className="px-8 py-3 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 inline-block hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
+            style={{
+              background: 'var(--theme-gradient, linear-gradient(135deg, #2563eb 0%, #3b82f6 100%))'
+            }}
+          >
             사진 변경
           </label>
         </div>

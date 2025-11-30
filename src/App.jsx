@@ -30,7 +30,7 @@ function App() {
       document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
       document.documentElement.style.setProperty('--theme-gradient', theme.gradient);
       
-      console.log(`✅ 테마 적용: ${theme.id}`);
+      console.log(`테마 적용: ${theme.id}`);
     };
 
     const initTheme = () => {

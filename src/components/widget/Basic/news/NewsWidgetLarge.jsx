@@ -1,7 +1,6 @@
 // src/components/widget/Basic/news/NewsWidgetLarge.jsx
 
 import React, { useState, useEffect } from 'react';
-import './NewsWidget.css';
 
 const NewsWidgetLarge = () => {
   const [currentSection, setCurrentSection] = useState('스포츠');
@@ -10,12 +9,11 @@ const NewsWidgetLarge = () => {
   const [error, setError] = useState(null);
 
   const sections = [
-    { id: 'all', name: '전체', query: '최신뉴스', sort: 'date' },
+    { id: 'all', name: '최신', query: '최신뉴스', sort: 'date' },
     { id: 'economy', name: '경제', query: '경제', sort: 'date' },
-    { id: 'entertainment', name: '엔터', query: '연예', sort: 'date' },
+    { id: 'entertainment', name: '연예', query: '연예', sort: 'date' },
     { id: 'health', name: '건강', query: '건강', sort: 'date' },
-    { id: 'sports', name: '스포츠', query: '스포츠', sort: 'date' },
-    { id: 'entertainment2', name: '엔터', query: '엔터테인먼트', sort: 'date' }
+    { id: 'sports', name: '스포츠', query: '스포츠', sort: 'date' }
   ];
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const NewsWidgetLarge = () => {
       const section = sections.find(s => s.name === sectionName);
       const url = `/api/naver/v1/search/news.json?query=${encodeURIComponent(section.query)}&display=4&sort=${section.sort}`;
       
-      console.log('📰 네이버 뉴스 API 호출 (대형):', sectionName);
+      console.log('네이버 뉴스 API 호출 (대형):', sectionName);
       
       const response = await fetch(url);
       
@@ -58,13 +56,13 @@ const NewsWidgetLarge = () => {
         }));
         
         setNews(articles);
-        console.log('✅ 뉴스 로드 완료 (대형):', articles.length);
+        console.log('뉴스 로드 완료 (대형):', articles.length);
       } else {
         setNews([]);
       }
       
     } catch (err) {
-      console.error('❌ 뉴스 로드 실패:', err);
+      console.error('뉴스 로드 실패:', err);
       setError(err.message);
       setNews([]);
     } finally {
@@ -74,7 +72,7 @@ const NewsWidgetLarge = () => {
 
   const handleTabClick = (sectionName) => {
     setCurrentSection(sectionName);
-    console.log('🔄 탭 변경:', sectionName);
+    console.log('탭 변경:', sectionName);
   };
 
   const handleNewsClick = (url) => {
@@ -84,12 +82,17 @@ const NewsWidgetLarge = () => {
   };
 
   return (
-    <div className="news-widget-large">
-      <div className="news-tabs-large">
+    <div className="w-full min-h-[300px] bg-white rounded-2xl shadow-lg overflow-hidden font-sans flex flex-col">
+      {/* 탭 메뉴 */}
+      <div className="flex gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200 overflow-x-auto flex-shrink-0">
         {sections.map(section => (
           <button
             key={section.id}
-            className={`news-tab-large ${currentSection === section.name ? 'active' : ''}`}
+            className={`px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-semibold cursor-pointer transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
+              currentSection === section.name
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'text-gray-600 hover:bg-gray-50 hover:border-gray-400'
+            }`}
             onClick={() => handleTabClick(section.name)}
           >
             {section.name}
@@ -97,25 +100,35 @@ const NewsWidgetLarge = () => {
         ))}
       </div>
 
-      <ul className="news-list-large">
+      {/* 뉴스 목록 */}
+      <ul className="list-none p-4 m-0 flex-1 overflow-y-auto">
         {loading ? (
-          <li className="news-loading-large">뉴스를 불러오는 중...</li>
+          <li className="py-[60px] px-5 text-center text-gray-400 text-sm">
+            뉴스를 불러오는 중...
+          </li>
         ) : error ? (
-          <li className="news-error-large">⚠️ {error}</li>
+          <li className="py-[60px] px-5 text-center text-red-500 text-sm">
+            {error}
+          </li>
         ) : news.length === 0 ? (
-          <li className="news-empty-large">뉴스가 없습니다</li>
+          <li className="py-[60px] px-5 text-center text-gray-400 text-sm">
+            뉴스가 없습니다
+          </li>
         ) : (
           news.map((item) => (
             <li 
               key={item.id} 
-              className="news-item-large"
+              className="p-3.5 mb-2.5 bg-white border border-gray-200 rounded-xl cursor-pointer transition-all duration-200 last:mb-0 hover:border-blue-600 hover:shadow-[0_2px_8px_rgba(37,99,235,0.1)] hover:-translate-y-0.5"
               onClick={() => handleNewsClick(item.url)}
             >
-              <div className="news-item-title">{item.title}</div>
+              <div className="text-sm leading-relaxed text-gray-800 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+                {item.title}
+              </div>
             </li>
           ))
         )}
       </ul>
+
     </div>
   );
 };

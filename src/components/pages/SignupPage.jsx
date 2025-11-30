@@ -1,7 +1,7 @@
 // src/components/pages/SignupPage.jsx
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './SignupPage.css';
 
 const SignupPage = () => {
@@ -9,10 +9,10 @@ const SignupPage = () => {
   const [formData, setFormData] = useState({
     nickname: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     profileImage: null
   });
-  const [profilePreview, setProfilePreview] = useState(null);
-  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,137 +25,134 @@ const SignupPage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 이미지 미리보기
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfilePreview(reader.result);
         setFormData(prev => ({
           ...prev,
-          profileImage: reader.result // Base64로 저장
+          profileImage: reader.result
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSignup = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
 
     // 유효성 검사
-    if (!formData.nickname.trim()) {
-      setError('닉네임을 입력해주세요.');
-      return;
-    }
-    if (!formData.email.trim()) {
-      setError('이메일을 입력해주세요.');
-      return;
-    }
-    if (!formData.profileImage) {
-      setError('프로필 사진을 업로드해주세요.');
+    if (!formData.nickname || !formData.email || !formData.password) {
+      alert('모든 필수 항목을 입력해주세요.');
       return;
     }
 
-    // 이메일 형식 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('올바른 이메일 형식이 아닙니다.');
+    if (formData.password !== formData.confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
 
-    // 기존 사용자 확인
+    if (formData.password.length < 6) {
+      alert('비밀번호는 최소 6자 이상이어야 합니다.');
+      return;
+    }
+
+    // 이메일 중복 확인
     const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const existingUser = Object.values(users).find(u => u.email === formData.email);
+    const emailExists = Object.values(users).some(u => u.email === formData.email);
 
-    if (existingUser) {
-      setError('이미 등록된 이메일입니다.');
+    if (emailExists) {
+      alert('이미 사용 중인 이메일입니다.');
       return;
     }
 
     // 새 사용자 생성
-    const userId = Date.now().toString();
     const newUser = {
-      id: userId,
+      id: Date.now().toString(),
       nickname: formData.nickname,
       email: formData.email,
-      profileImage: formData.profileImage,
+      password: formData.password,
+      profileImage: formData.profileImage || null,
       createdAt: new Date().toISOString()
     };
 
-    // 사용자 저장
-    users[userId] = newUser;
+    // localStorage에 저장
+    users[newUser.id] = newUser;
     localStorage.setItem('users', JSON.stringify(users));
 
-    // 자동 로그인
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-
+    console.log('✅ 회원가입 성공:', newUser.nickname);
     alert('회원가입이 완료되었습니다!');
-    navigate('/');
+
+    // 로그인 페이지로 이동
+    navigate('/login');
   };
 
   return (
     <div className="signup-container">
       <div className="signup-box">
-        <h1 className="signup-title">🎨 회원가입</h1>
-        <p className="signup-subtitle">나만의 대시보드를 만들어보세요</p>
-
-        <form onSubmit={handleSignup} className="signup-form">
-          {/* 프로필 이미지 */}
-          <div className="form-group profile-image-group">
-            <label>프로필 사진 *</label>
-            <div className="profile-upload-area">
-              <div className="profile-preview">
-                {profilePreview ? (
-                  <img src={profilePreview} alt="프로필 미리보기" />
-                ) : (
-                  <div className="profile-placeholder">
-                    <span>📷</span>
-                    <p>이미지를 업로드하세요</p>
-                  </div>
-                )}
-              </div>
-              <input
-                type="file"
-                id="profileImage"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="file-input"
-              />
-              <label htmlFor="profileImage" className="file-input-label">
-                이미지 선택
-              </label>
-            </div>
-          </div>
-
-          {/* 닉네임 */}
+        <h1 className="signup-title">회원가입</h1>
+        
+        <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
             <label htmlFor="nickname">닉네임 *</label>
             <input
               type="text"
               id="nickname"
               name="nickname"
-              className="form-input"
-              placeholder="닉네임을 입력하세요"
               value={formData.nickname}
               onChange={handleInputChange}
+              placeholder="닉네임을 입력하세요"
+              required
             />
           </div>
 
-          {/* 이메일 */}
           <div className="form-group">
             <label htmlFor="email">이메일 *</label>
             <input
               type="email"
               id="email"
               name="email"
-              className="form-input"
-              placeholder="abcdefg@hansung.ac.kr"
               value={formData.email}
               onChange={handleInputChange}
+              placeholder="email@example.com"
+              required
             />
           </div>
 
-          {error && <p className="error-message">{error}</p>}
+          <div className="form-group">
+            <label htmlFor="password">비밀번호 *</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="최소 6자 이상"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">비밀번호 확인 *</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              placeholder="비밀번호를 다시 입력하세요"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="profileImage">프로필 사진 (선택)</label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
 
           <button type="submit" className="signup-button">
             회원가입
@@ -163,13 +160,9 @@ const SignupPage = () => {
         </form>
 
         <div className="signup-footer">
-          <p>이미 계정이 있으신가요?</p>
-          <button 
-            className="login-link"
-            onClick={() => navigate('/login')}
-          >
-            로그인하기
-          </button>
+          <p>
+            이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+          </p>
         </div>
       </div>
     </div>

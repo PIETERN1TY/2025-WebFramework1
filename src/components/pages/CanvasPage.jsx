@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CanvasPage.css';
+import { WIDGET_OPTIONS } from '../../config/WidgetConfig';  // ✅
+
 
 const CanvasPage = () => {
   const navigate = useNavigate();
@@ -64,12 +66,12 @@ const CanvasPage = () => {
       window.dispatchEvent(new Event('canvasChanged'));
     }
     
-    navigate(`/canvas/edit/${newId}`);
+    navigate(`/dashboard/canvas/edit/${id}`);  
   };
 
   // 캔버스 편집
   const handleEditCanvas = (id) => {
-    navigate(`/canvas/edit/${id}`);
+    navigate(`/dashboard/canvas/edit/${id}`); 
   };
 
   // 캔버스 활성화 (HomePage에 표시)

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GridLayout from 'react-grid-layout';
-import { WIDGET_OPTIONS } from '../../App.jsx';
+import { WIDGET_OPTIONS } from '../../config/WidgetConfig';  // ✅
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import './HomePage.css';

@@ -30,25 +30,58 @@ const WeatherWidgetSmall = () => {
             setError(null);
 
             try {
-                // 서울 날씨 가져오기
-                const response = await fetch(
+                // 1. 현재 날씨 가져오기
+                const currentResponse = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=${WEATHER_API_KEY}&units=metric&lang=kr`
                 );
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (!currentResponse.ok) {
+                    throw new Error(`HTTP error! status: ${currentResponse.status}`);
                 }
 
-                const data = await response.json();
-                console.log('📊 날씨 데이터:', data);
+                const currentData = await currentResponse.json();
+                console.log('📊 현재 날씨 데이터:', currentData);
+
+                // 2. 예보 데이터로 향후 24시간의 최고/최저 구하기
+                const forecastResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?q=Seoul&appid=${WEATHER_API_KEY}&units=metric&lang=kr`
+                );
+
+                if (!forecastResponse.ok) {
+                    throw new Error('예보 데이터를 가져올 수 없습니다.');
+                }
+
+                const forecastData = await forecastResponse.json();
+                console.log('📊 예보 데이터:', forecastData);
+
+                // 향후 8개 데이터 (24시간, 3시간 간격)
+                const next24Hours = forecastData.list.slice(0, 8);
+                
+                console.log('📅 향후 24시간 예보:', next24Hours);
+
+                // 최고/최저 온도 계산
+                let tempMax, tempMin;
+                
+                if (next24Hours.length > 0) {
+                    const temps = next24Hours.map(f => f.main.temp);
+                    tempMax = Math.round(Math.max(...temps));
+                    tempMin = Math.round(Math.min(...temps));
+                    
+                    console.log('🌡️ 24시간 온도 범위:', temps);
+                    console.log('🌡️ 계산된 최고:', tempMax, '최저:', tempMin);
+                } else {
+                    // fallback
+                    tempMax = Math.round(currentData.main.temp_max);
+                    tempMin = Math.round(currentData.main.temp_min);
+                }
 
                 setWeather({
-                    temp: Math.round(data.main.temp),
-                    tempMax: Math.round(data.main.temp_max),
-                    tempMin: Math.round(data.main.temp_min),
-                    icon: data.weather[0].icon,
-                    description: data.weather[0].description,
-                    city: data.name
+                    temp: Math.round(currentData.main.temp),
+                    tempMax: tempMax,
+                    tempMin: tempMin,
+                    icon: currentData.weather[0].icon,
+                    description: currentData.weather[0].description,
+                    city: currentData.name
                 });
             } catch (err) {
                 console.error('❌ 날씨 데이터를 가져오는 데 실패:', err);
@@ -82,24 +115,24 @@ const WeatherWidgetSmall = () => {
 
     return (
         <div className="weather-widget weather-small">
-            {/* 도시명 */}
-            <div className="weather-city">
-                {weather.city} 📍
+            {/* 상단: 도시명과 온도 (왼쪽 정렬) */}
+            <div className="weather-small-header">
+                <div className="weather-city">
+                    {weather.city} 📍
+                </div>
+                <div className="weather-current-temp">
+                    {weather.temp}°
+                </div>
             </div>
 
-            {/* 현재 온도 */}
-            <div className="weather-current-temp">
-                {weather.temp}°
-            </div>
-
-            {/* 날씨 아이콘 */}
-            <div className="weather-icon-small">
-                {WEATHER_ICONS[weather.icon] || '☁️'}
-            </div>
-
-            {/* 최고/최저 온도 */}
-            <div className="weather-minmax">
-                최고: {weather.tempMax}° 최저: {weather.tempMin}°
+            {/* 하단: 날씨 아이콘과 최고/최저 온도 */}
+            <div className="weather-small-footer">
+                <div className="weather-icon-small">
+                    {WEATHER_ICONS[weather.icon] || '☁️'}
+                </div>
+                <div className="weather-minmax">
+                    최고: {weather.tempMax}° 최저: {weather.tempMin}°
+                </div>
             </div>
         </div>
     );

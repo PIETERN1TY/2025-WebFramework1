@@ -15,32 +15,45 @@
 
 /* ====== 소형 위젯 (정사각형) ====== */
 .weather-widget.weather-small {
-    text-align: center;
+    padding: 15px 20px;
+}
+
+/* 상단: 도시명과 온도 (왼쪽 정렬) */
+.weather-small-header {
+    text-align: left;
+    margin-bottom: 15px;
 }
 
 .weather-city {
     font-size: 0.9em;
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     opacity: 0.95;
 }
 
 .weather-current-temp {
     font-size: 3.5em;
-    font-weight: 300;
+    font-weight: 700; /* Bold 적용! */
     line-height: 1;
-    margin: 10px 0;
+    margin: 0;
+}
+
+/* 하단: 아이콘과 최고/최저 */
+.weather-small-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
 }
 
 .weather-icon-small {
     font-size: 2.5em;
-    margin: 15px 0;
 }
 
 .weather-minmax {
-    font-size: 0.85em;
+    font-size: 0.8em;
     opacity: 0.9;
-    margin-top: 10px;
+    text-align: right;
 }
 
 /* ====== 대형 위젯 (직사각형) ====== */
@@ -71,7 +84,7 @@
 
 .weather-current-temp-large {
     font-size: 3em;
-    font-weight: 300;
+    font-weight: 700; /* Bold 적용! */
     line-height: 1;
 }
 

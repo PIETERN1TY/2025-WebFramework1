@@ -1,29 +1,133 @@
-// NewsWidgetSmall.jsx
-// src/components/widgets/NewsWidgetSmall.jsx
-import React from 'react';
-import './NewsWidget.css'; 
+// src/components/widget/Basic/news/NewsWidgetSmall.jsx
+
+import React, { useState, useEffect } from 'react';
+import './NewsWidget.css';
 
 const NewsWidgetSmall = () => {
-    return (
-        <div className="news-widget news-small">
-            <div className="news-header">
-                <div className="news-small-tab">
-                    {['전체', '경제', '엔터', '건강', '스포츠'].map((tab, index) => (
-                        <button key={tab} className={index === 4 ? 'active' : ''}>
-                            {tab}
-                        </button>
-                    ))}
-                </div>
-                {/*  */}
+  const [currentSection, setCurrentSection] = useState('스포츠');
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const sections = [
+    { id: 'all', name: '전체', query: '최신뉴스', sort: 'date' },
+    { id: 'economy', name: '경제', query: '경제', sort: 'date' },
+    { id: 'entertainment', name: '엔터', query: '연예', sort: 'date' },
+    { id: 'health', name: '건강', query: '건강', sort: 'date' },
+    { id: 'sports', name: '스포츠', query: '스포츠', sort: 'date' }
+  ];
+
+  useEffect(() => {
+    loadNews(currentSection);
+  }, [currentSection]);
+
+  const loadNews = async (sectionName) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const section = sections.find(s => s.name === sectionName);
+      const url = `/api/naver/v1/search/news.json?query=${encodeURIComponent(section.query)}&display=4&sort=${section.sort}`;
+      
+      console.log('📰 네이버 뉴스 API 호출:', sectionName);
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.items && data.items.length > 0) {
+        const articles = data.items.map((item, index) => ({
+          id: index,
+          title: item.title
+            .replace(/<\/?b>/g, '')
+            .replace(/&quot;/g, '"')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>'),
+          url: item.link,
+          publishedAt: item.pubDate
+        }));
+        
+        setNews(articles);
+        console.log('✅ 뉴스 로드 완료:', articles.length);
+      } else {
+        setNews([]);
+      }
+      
+    } catch (err) {
+      console.error('❌ 뉴스 로드 실패:', err);
+      setError(err.message);
+      setNews([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSectionSelect = (sectionName) => {
+    setCurrentSection(sectionName);
+    setIsDropdownOpen(false);
+    console.log('🔄 섹션 변경:', sectionName);
+  };
+
+  const handleNewsClick = (url) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <div className="news-widget-small">
+      <div className="news-header-small">
+        <span className="news-title-small">이 시각 주요뉴스</span>
+        <div className="news-dropdown">
+          <button 
+            className="news-dropdown-button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            ▼ {currentSection}
+          </button>
+          {isDropdownOpen && (
+            <div className="news-dropdown-menu">
+              {sections.map(section => (
+                <button
+                  key={section.id}
+                  className={`news-dropdown-item ${currentSection === section.name ? 'active' : ''}`}
+                  onClick={() => handleSectionSelect(section.name)}
+                >
+                  {section.name}
+                </button>
+              ))}
             </div>
-            <ul className="news-list">
-                <li className="news-item">오타니, MLB 통산 4번째 실버슬러거  일본인 최다11111111111111111232131231ß1111111111111</li>
-                <li className="news-item">‘극장 역전골 폭발' 이재성 "유럽대항전 뛸 수 있을까 생각했는데 감회 새롭11111111111</li>
-                <li className="news-item">정규 리그 4라운드로 축소 등, 2026 LCK 운영 계획11111111111111</li>
-                <li className="news-item">'빅리그 도전' 앞둔 송성문, 김혜성도 응원한다…"성문이 형은 다 잘한다, MLB1111111111</li>
-            </ul>
+          )}
         </div>
-    );
+      </div>
+
+      <ul className="news-list-small">
+        {loading ? (
+          <li className="news-loading-small">뉴스를 불러오는 중...</li>
+        ) : error ? (
+          <li className="news-error-small">⚠️ {error}</li>
+        ) : news.length === 0 ? (
+          <li className="news-empty-small">뉴스가 없습니다</li>
+        ) : (
+          news.map((item) => (
+            <li 
+              key={item.id} 
+              className="news-item-small"
+              onClick={() => handleNewsClick(item.url)}
+            >
+              {item.title}
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  );
 };
 
 export default NewsWidgetSmall;

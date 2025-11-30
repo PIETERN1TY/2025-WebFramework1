@@ -8,7 +8,7 @@ import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import HomePage from './HomePage';
 import CanvasPage from './CanvasPage';
-import CanvasEditor from './CanvasEditor';
+import CanvasEditor from './Canvaseditor';
 import SettingsPage from './SettingsPage';
 
 const DashboardPage = () => {

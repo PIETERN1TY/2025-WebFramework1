@@ -47,6 +47,7 @@ No.8은 개인화된 대시보드를 구성하는 Front-end only Application입�
 이 프로젝트는 한성대학교의 2025년 2학기 웹프레임워크1 (N)의 과정 중에 진행 된 프로젝트입니다.
 
 행정안전부에서 2024년 작성하여 공공누리 제1유형으로 개방한 ‘[범정부 UI/UX 디자인시스템(KRDS)](https://www.krds.go.kr)’을 이용하였습니다.
+
 ```
 number_8
 ├─ AGENT.md
@@ -71,17 +72,26 @@ number_8
 │  │     └─ widget.png
 │  ├─ components
 │  │  ├─ AddWidget.jsx
+│  │  ├─ auth
+│  │  │  └─ ProtectedRoute.jsx
 │  │  ├─ common
 │  │  │  ├─ Button.jsx
 │  │  │  ├─ LoadingSpinner.jsx
 │  │  │  └─ Modal.jsx
 │  │  ├─ pages
+│  │  │  ├─ CanvasPage.css
 │  │  │  ├─ CanvasPage.jsx
+│  │  │  ├─ Canvaseditor.css
+│  │  │  ├─ Canvaseditor.jsx
 │  │  │  ├─ DashboardPage.jsx
 │  │  │  ├─ HomePage.css
 │  │  │  ├─ HomePage.jsx
+│  │  │  ├─ LoginPage.css
+│  │  │  ├─ LoginPage.jsx
 │  │  │  ├─ SettingsPage.css
 │  │  │  ├─ SettingsPage.jsx
+│  │  │  ├─ SignupPage.css
+│  │  │  ├─ SignupPage.jsx
 │  │  │  ├─ WidgetPage.css
 │  │  │  ├─ WidgetPage.jsx
 │  │  │  ├─ layout
@@ -108,6 +118,10 @@ number_8
 │  │     │  ├─ calendar
 │  │     │  │  ├─ CalendarWidget.css
 │  │     │  │  └─ CalendarWidget.jsx
+│  │     │  ├─ memo
+│  │     │  │  ├─ MemoWidget.css
+│  │     │  │  ├─ MemoWidgetLarge.jsx
+│  │     │  │  └─ MemoWidgetSmall.jsx
 │  │     │  ├─ news
 │  │     │  │  ├─ NewsAPI.jsx
 │  │     │  │  ├─ NewsWidget.css

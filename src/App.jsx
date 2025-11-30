@@ -1,46 +1,86 @@
 // src/App.jsx
 
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import DashboardPage from './components/pages/DashboardPage.jsx';
-import NewsWidgetLarge from '../src/components/widget/Basic/news/NewsWidgetLarge.jsx';
-import NewsWidgetSmall from '../src/components/widget/Basic/news/NewsWidgetSmall.jsx';
-import CalendarWidget from '../src/components/widget/Basic/calendar/CalendarWidget.jsx';
-import WeatherWidgetLarge from '../src/components/widget/Basic/weather/WeatherWidgetLarge.jsx';
-import WeatherWidgetSmall from '../src/components/widget/Basic/weather/WeatherWidgetSmall.jsx';
-import TranslatorWidget from '../src/components/widget/Basic/translator/TranslatorWidget.jsx';
-import CanvasEditor from './components/pages/CanvasEditor.jsx'; 
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './components/pages/LoginPage';
+import SignupPage from './components/pages/SignupPage';
+import DashboardPage from './components/pages/DashboardPage';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
-// 참고: App.css import는 제거된 상태를 유지합니다.
+// 테마 색상 정의
+const THEME_COLORS = [
+  { id: 'blue', primary: '#1e3a5f', secondary: '#4a90e2', gradient: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)' },
+  { id: 'purple', primary: '#4a1a5f', secondary: '#8b5cf6', gradient: 'linear-gradient(135deg, rgb(139, 79, 242) 0%, rgb(193, 127, 255) 100%)' },
+  { id: 'pink', primary: '#831843', secondary: '#ec4899', gradient: 'linear-gradient(135deg, #db2777 0%, #ec4899 100%)' },
+  { id: 'red', primary: '#7f1d1d', secondary: '#ef4444', gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)' },
+  { id: 'orange', primary: '#7c2d12', secondary: '#f97316', gradient: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)' },
+  { id: 'yellow', primary: '#854d0e', secondary: '#eab308', gradient: 'linear-gradient(135deg, rgb(248, 191, 66) 0%, rgb(245, 216, 128) 100%)' },
+  { id: 'lime', primary: '#3f6212', secondary: '#84cc16', gradient: 'linear-gradient(135deg, #65a30d 0%, #84cc16 100%)' },
+  { id: 'gray', primary: '#374151', secondary: '#6b7280', gradient: 'linear-gradient(135deg, #4b5563 0%, #6b7280 100%)' }
+];
 
 function App() {
+  // 테마 초기화
+  useEffect(() => {
+    const applyTheme = (themeId) => {
+      const theme = THEME_COLORS.find(t => t.id === themeId);
+      if (!theme) return;
+
+      document.documentElement.style.setProperty('--theme-primary', theme.primary);
+      document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
+      document.documentElement.style.setProperty('--theme-gradient', theme.gradient);
+      
+      console.log(`✅ 테마 적용: ${theme.id}`);
+    };
+
+    const initTheme = () => {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser) {
+        const savedTheme = localStorage.getItem(`theme_${currentUser.id}`) || 'blue';
+        applyTheme(savedTheme);
+      } else {
+        applyTheme('blue');
+      }
+    };
+
+    initTheme();
+
+    const handleThemeChange = () => {
+      initTheme();
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    
+    return () => {
+      window.removeEventListener('themeChanged', handleThemeChange);
+    };
+  }, []);
+
   return (
-    // 라우팅을 위한 BrowserRouter 설정
-    <BrowserRouter>
-      {/* DashboardPage를 유일한 Route로 설정하여 전체 레이아웃을 잡습니다. */}
-      {/* 이 Route 내에서 SideMenu를 렌더링하고, URL에 따라 내부 콘텐츠만 변경합니다. */}
+    <Router>
       <Routes>
-        <Route path="*" element={<DashboardPage />} />
+        {/* 기본 경로 - 로그인 화면으로 리다이렉트 */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        
+        {/* 로그인/회원가입 */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        
+        {/* 대시보드 (인증 필요) */}
+        <Route 
+          path="/dashboard/*" 
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* 알 수 없는 경로 - 로그인으로 리다이렉트 */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
-// [가상] App.jsx 또는 LayoutContext.js
 
-// 위젯 목록 (사용 가능한 모든 위젯의 목록)
-export const WIDGET_OPTIONS = [
-  { id: 'newsL', name: '뉴스 (대형)', Component: NewsWidgetLarge },
-  { id: 'trans', name: '번역기', Component: TranslatorWidget },
-  { id: 'cal', name: '캘린더', Component: CalendarWidget },
-  { id: 'weatherL', name: '날씨 (대형)', Component: WeatherWidgetLarge },
-  { id: 'weatherS', name: '날씨 (소형)', Component: WeatherWidgetSmall },
-  // ... 기타 위젯
-];
-
-// 초기 레이아웃 상태 (w, h는 그리드 셀 단위 크기)
-export const INITIAL_LAYOUT = [
-  { i: 'newsL', x: 0, y: 0, w: 4, h: 4, static: false },
-  { i: 'trans', x: 4, y: 0, w: 4, h: 4, static: false },
-  { i: 'cal', x: 8, y: 0, w: 4, h: 4, static: false },
-];
 export default App;

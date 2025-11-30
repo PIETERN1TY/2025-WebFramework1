@@ -31,7 +31,7 @@ const WeatherWidgetLarge = () => {
             setError(null);
 
             try {
-                // 현재 날씨
+                // 1. 현재 날씨
                 const currentResponse = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=${WEATHER_API_KEY}&units=metric&lang=kr`
                 );
@@ -41,16 +41,9 @@ const WeatherWidgetLarge = () => {
                 }
 
                 const currentData = await currentResponse.json();
-                
-                setCurrentWeather({
-                    temp: Math.round(currentData.main.temp),
-                    tempMax: Math.round(currentData.main.temp_max),
-                    tempMin: Math.round(currentData.main.temp_min),
-                    icon: currentData.weather[0].icon,
-                    city: currentData.name
-                });
+                console.log('📊 현재 날씨 데이터:', currentData);
 
-                // 5일 예보 (3시간 간격)
+                // 2. 5일 예보 (3시간 간격)
                 const forecastResponse = await fetch(
                     `https://api.openweathermap.org/data/2.5/forecast?q=Seoul&appid=${WEATHER_API_KEY}&units=metric&lang=kr`
                 );
@@ -62,13 +55,45 @@ const WeatherWidgetLarge = () => {
                 const forecastData = await forecastResponse.json();
                 console.log('📊 예보 데이터:', forecastData);
 
-                // 오늘 기준 6개 시간대 추출 (3시간 간격)
+                // 3. 향후 24시간 (8개 데이터)의 최고/최저 온도 계산
+                const next24Hours = forecastData.list.slice(0, 8);
+                
+                console.log('📅 향후 24시간 예보:', next24Hours);
+
+                let tempMax, tempMin;
+                
+                if (next24Hours.length > 0) {
+                    const temps = next24Hours.map(f => f.main.temp);
+                    tempMax = Math.round(Math.max(...temps));
+                    tempMin = Math.round(Math.min(...temps));
+                    
+                    console.log('🌡️ 24시간 온도 범위:', temps);
+                    console.log('🌡️ 계산된 최고:', tempMax, '최저:', tempMin);
+                } else {
+                    // fallback
+                    tempMax = Math.round(currentData.main.temp_max);
+                    tempMin = Math.round(currentData.main.temp_min);
+                }
+
+                setCurrentWeather({
+                    temp: Math.round(currentData.main.temp),
+                    tempMax: tempMax,
+                    tempMin: tempMin,
+                    icon: currentData.weather[0].icon,
+                    city: currentData.name
+                });
+
+                // 4. 시간대별 예보 6개 추출
                 const hourlyForecast = forecastData.list.slice(0, 6).map(item => {
                     const date = new Date(item.dt * 1000);
                     const hour = date.getHours();
                     
+                    // 오전/오후 구분
+                    const period = hour < 12 ? '오전' : '오후';
+                    const displayHour = hour === 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+                    
                     return {
-                        time: `오후 ${hour > 12 ? hour - 12 : hour}시`,
+                        time: `${period} ${displayHour}시`,
                         temp: Math.round(item.main.temp),
                         icon: item.weather[0].icon
                     };

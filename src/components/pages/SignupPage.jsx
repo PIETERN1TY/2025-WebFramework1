@@ -106,7 +106,7 @@ const SignupPage = () => {
               onChange={handleInputChange}
               placeholder="닉네임을 입력하세요"
               required
-              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-base transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
+              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-[0.95em] transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
             />
           </div>
 
@@ -121,7 +121,7 @@ const SignupPage = () => {
               onChange={handleInputChange}
               placeholder="hansung@naver.com"
               required
-              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-base transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
+              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-[0.95em] transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
             />
           </div>
 
@@ -136,7 +136,7 @@ const SignupPage = () => {
               onChange={handleInputChange}
               placeholder="최소 6자 이상 입력하세요"
               required
-              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-base transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400 "
+              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-[0.95em] transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400 "
             />
           </div>
 
@@ -151,7 +151,7 @@ const SignupPage = () => {
               onChange={handleInputChange}
               placeholder="비밀번호를 다시 입력하세요"
               required
-              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-base transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
+              className="p-3 sm:p-3.5 border-2 border-[#e0e0e0] rounded-xl text-[0.95em] transition-colors duration-300 focus:outline-none focus:border-[#667eea] placeholder:text-xl placeholder:text-gray-400"
             />
           </div>
 

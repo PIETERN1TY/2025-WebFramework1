@@ -110,7 +110,7 @@ const CanvasPage = () => {
     <div className="w-full h-full p-10 box-border overflow-auto">
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-[2em] text-gray-800 m-0">
+        <h1 className="text-[1.8em] text-gray-800 m-0">
           🎨 {currentUser.nickname}님의 캔버스
         </h1>
         <button 

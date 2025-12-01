@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 // Gemini API 호출을 위한 설정
-const API_KEY = "AIzaSyCGmkU4oV3iirP7_pLxhCB2qlLXu7I49HY"; 
+const API_KEY = ""; 
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
 
 const LANG_MAP = {

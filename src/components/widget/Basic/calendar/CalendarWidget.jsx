@@ -34,10 +34,9 @@ const CalendarGrid = ({ currentDate, selectedDate, setSelectedDate }) => {
             const isToday = dateString === today;
             const isSelected = selectedDate && dateString === selectedDate.toDateString();
             
-            // 캘린더 CSS의 var(--theme-secondary)를 인라인 스타일로 대체하여 사용
             const themeSecondary = getThemeColor('--theme-secondary', '#4a90e2');
             
-            let classes = "p-2 text-sm font-medium rounded-full cursor-pointer transition-all duration-150 hover:bg-gray-100";
+            let classes = "p-2 text-[0.6em] font-medium rounded-full cursor-pointer transition-all duration-150 hover:bg-gray-100";
             let style = {};
 
             if (isSelected) {
@@ -92,7 +91,7 @@ const CalendarGrid = ({ currentDate, selectedDate, setSelectedDate }) => {
                 >
                     &lt;
                 </button>
-                <div className="text-lg font-extrabold flex-1 text-center">
+                <div className="text-xl font-extrabold flex-1 text-center">
                     {currentDate.getFullYear()}년 {monthNames[currentDate.getMonth()]}
                 </div>
                 <button 
@@ -105,7 +104,7 @@ const CalendarGrid = ({ currentDate, selectedDate, setSelectedDate }) => {
             </div>
 
             {/* 요일 표시 */}
-            <div className="grid grid-cols-7 text-center text-xs font-extrabold text-gray-500 pb-1">
+            <div className="grid grid-cols-7 text-center text-[0.6em] font-extrabold text-gray-500 pb-1">
                 <div>일</div>
                 <div>월</div>
                 <div>화</div>

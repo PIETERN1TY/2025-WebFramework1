@@ -81,14 +81,14 @@ const HomePage = () => {
             
             <div className="flex justify-between items-center mb-6 flex-shrink-0">
                 {/* .dashboard-title */}
-                <h1 className="text-[1.8em] text-gray-800 m-0">
-                    {currentUser.nickname}님의 대시보드
+                <h1 className="text-[1.8em] text-gray-800 m-6">
+                    &nbsp;{currentUser.nickname}님의 대시보드
                 </h1>
                 
                 {activeCanvas && (
                     <div className="flex items-center">
                         {/* .canvas-badge */}
-                        <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        <span className="bg-blue-600 text-white px-6 py-4 rounded-full text-2xl font-semibold">
                             {activeCanvas.name}
                         </span>
                     </div>
@@ -129,7 +129,7 @@ const HomePage = () => {
                     <p className="text-[1.8em] font-semibold text-gray-800 my-2.5">
                         아직 활성화된 캔버스가 없습니다.
                     </p>
-                    <p className="text-xl text-gray-600 my-2.5">
+                    <p className="text-2xl text-gray-600 my-2.5">
                         CANVAS 메뉴에서 새 캔버스를 만들고 활성화하세요!
                     </p>
                 </div>

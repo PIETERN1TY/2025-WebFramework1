@@ -100,10 +100,10 @@ const MemoWidgetLarge = () => {
                 >
                     <div className="flex items-center gap-2">
                         <span className="text-xl">📝</span>
-                        <span className="text-lg font-bold">메모</span>
+                        <span className="text-xl font-bold">메모</span>
                     </div>
                     <button 
-                        className="bg-white/20 hover:bg-white/30 border-none rounded-md px-2.5 py-1.5 text-white cursor-pointer transition-all duration-200 text-sm hover:scale-105"
+                        className="bg-white/20 hover:bg-white/30 border-none rounded-md px-2.5 py-1.5 text-white cursor-pointer transition-all duration-200 text-[0.7em] hover:scale-105"
                         onClick={openEditor}
                     >
                         <FaPencilAlt />
@@ -124,7 +124,7 @@ const MemoWidgetLarge = () => {
                                 onContextMenu={(e) => deleteMemo(memo.id, e)}
                                 title="클릭: 편집 | 우클릭: 삭제"
                             >
-                                <div className="text-sm font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
+                                <div className="text-[0.8em] font-semibold text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis">
                                     {memo.title}
                                 </div>
                             </div>
@@ -188,14 +188,14 @@ const MemoEditorModal = ({ onSave, onClose, initialMemo }) => {
                     </div>
                     <div className="flex gap-2.5">
                         <button 
-                            className="bg-white/20 hover:bg-red-400/40 border-none rounded-lg px-3.5 py-2.5 text-white cursor-pointer transition-all duration-200 text-base flex items-center justify-center min-w-[44px] min-h-[44px] hover:scale-110"
+                            className="bg-white/20 hover:bg-red-400/40 border-none rounded-lg px-3.5 py-2.5 text-white cursor-pointer transition-all duration-200 text-base flex items-center justify-center min-w-[20px] min-h-[20px] hover:scale-110"
                             onClick={onClose}
                             title="취소"
                         >
                             ✕
                         </button>
                         <button 
-                            className="bg-white/20 hover:bg-white/40 border-none rounded-lg px-3.5 py-2.5 text-white cursor-pointer transition-all duration-200 text-xl flex items-center justify-center min-w-[44px] min-h-[44px] hover:scale-110"
+                            className="bg-white/20 hover:bg-white/40 border-none rounded-lg px-3.5 py-2.5 text-white cursor-pointer transition-all duration-200 text-xl flex items-center justify-center min-w-[20px] min-h-[20px] hover:scale-110"
                             onClick={handleSave}
                             title="저장"
                         >
@@ -211,14 +211,14 @@ const MemoEditorModal = ({ onSave, onClose, initialMemo }) => {
                         placeholder="제목"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl text-base font-semibold transition-all duration-200 box-border flex-shrink-0 focus:outline-none focus:border-[var(--theme-secondary,#2d7a4f)] focus:shadow-[0_0_0_3px_rgba(45,122,79,0.1)]"
+                        className="w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl text-[0.7em] font-semibold transition-all duration-200 box-border flex-shrink-0 focus:outline-none focus:border-[var(--theme-secondary,#2d7a4f)] focus:shadow-[0_0_0_3px_rgba(45,122,79,0.1)]"
                     />
 
                     <textarea
                         placeholder="내용을 입력하세요..."
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="flex-1 min-h-0 px-4 py-3.5 border-2 border-gray-300 rounded-xl text-base leading-relaxed resize-none transition-all duration-200 box-border focus:outline-none focus:border-[var(--theme-secondary,#2d7a4f)] focus:shadow-[0_0_0_3px_rgba(45,122,79,0.1)]"
+                        className="flex-1 min-h-0 px-4 py-3.5 border-2 border-gray-300 rounded-xl text-[0.7em] leading-relaxed resize-none transition-all duration-200 box-border focus:outline-none focus:border-[var(--theme-secondary,#2d7a4f)] focus:shadow-[0_0_0_3px_rgba(45,122,79,0.1)]"
                         style={{
                             fontFamily: 'inherit'
                         }}

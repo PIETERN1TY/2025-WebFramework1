@@ -165,7 +165,7 @@ const CanvasEditor = () => {
             {/* 헤더 */}
             <div className="flex justify-between items-center mb-5 flex-shrink-0">
                 <button 
-                    className="bg-gray-600 hover:bg-gray-700 text-white border-none px-5 py-2.5 rounded-lg cursor-pointer text-base font-semibold transition-all duration-200"
+                    className="bg-gray-600 hover:bg-gray-700 text-white border-none px-5 py-2.5 rounded-lg cursor-pointer text-2xl font-semibold transition-all duration-200"
                     onClick={handleBack}
                 >
                     ← 캔버스 목록
@@ -193,7 +193,7 @@ const CanvasEditor = () => {
                 </div>
 
                 <button 
-                    className="bg-green-600 hover:bg-green-700 text-white border-none px-6 py-3 rounded-lg cursor-pointer text-base font-semibold transition-all duration-200"
+                    className="bg-green-600 hover:bg-green-700 text-white border-none px-6 py-3 rounded-lg cursor-pointer text-2xl font-semibold transition-all duration-200"
                     onClick={handleSave}
                 >
                     💾 저장
@@ -244,7 +244,7 @@ const CanvasEditor = () => {
 
                     {currentLayout.length === 0 && (
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none z-[1]">
-                            <p className="text-xl text-gray-600 bg-white/90 px-8 py-5 rounded-xl border-2 border-dashed border-gray-400 m-0">
+                            <p className="text-2xl text-gray-600 bg-white/90 px-8 py-5 rounded-xl border-2 border-dashed border-gray-400 m-0">
                                 👉 오른쪽 위젯 목록에서 위젯을 드래그하여 배치하세요
                             </p>
                         </div>
@@ -252,8 +252,8 @@ const CanvasEditor = () => {
                 </div>
 
                 {/* 위젯 팔레트 */}
-                <div className="w-[280px] flex-shrink-0 flex flex-col bg-gray-50 rounded-xl border border-gray-300 overflow-hidden">
-                    <h3 className="m-0 px-5 py-5 text-xl text-gray-800 border-b-2 border-gray-300 bg-white">
+                <div className="w-[200px] h-[840px] flex-shrink-0 flex flex-col bg-gray-50 rounded-xl border border-gray-300 overflow-hidden">
+                    <h3 className="m-0 px-5 py-5 text-2xl text-gray-800 border-b-2 border-gray-300 bg-white">
                         위젯 목록
                     </h3>
                     
@@ -268,7 +268,7 @@ const CanvasEditor = () => {
                                         onDragStart={(e) => handleDragStart(e, widget)}
                                     >
                                         <span className="text-3xl">📦</span>
-                                        <span className="font-medium text-gray-800 text-base">
+                                        <span className="font-medium text-gray-800 text-xl">
                                             {widget.name}
                                         </span>
                                     </div>
@@ -276,7 +276,7 @@ const CanvasEditor = () => {
                             </div>
                         ) : (
                             <p className="text-center text-gray-400 italic py-5 bg-white/50 rounded-lg">
-                                모든 위젯이 배치되었습니다
+
                             </p>
                         )}
                     </div>

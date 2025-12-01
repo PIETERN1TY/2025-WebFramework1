@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
-// Gemini API 호출을 위한 설정
-const API_KEY = "AIzaSyCGmkU4oV3iirP7_pLxhCB2qlLXu7I49HY"; 
+const API_KEY = "AIzaSyAc5hNDVG0XlIlPqFt4qGmnY-LJqjfSX08"; 
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
 
+
+// 지원 언어 목록 확장
 const LANG_MAP = {
     'ko': '한국어',
     'en': '영어',
@@ -13,7 +14,16 @@ const LANG_MAP = {
     'es': '스페인어',
     'zh': '중국어',
     'ru': '러시아어',
+    'it': '이탈리아어',
+    'pt': '포르투갈어',
+    'ar': '아랍어',
+    'hi': '힌디어',
+    'th': '태국어',
+    'vi': '베트남어',
 };
+
+// 드롭다운에 사용할 언어 코드와 이름 목록
+const LANGUAGE_OPTIONS = Object.entries(LANG_MAP).map(([code, name]) => ({ code, name }));
 
 const SwapIcon = (
     <svg 
@@ -58,7 +68,28 @@ const TranslatorWidget = () => {
         setInputText(event.target.value);
     };
 
-    // 4. 번역 실행 핸들러 (Gemini API 호출)
+    // 4. 소스 언어 변경 핸들러 (드롭다운)
+    const handleSourceLangChange = (event) => {
+        const newSourceLang = event.target.value;
+        // 대상 언어와 동일하면, 대상 언어를 이전 소스 언어로 자동 교체
+        if (newSourceLang === targetLang) {
+            setTargetLang(sourceLang); // 이전 소스 언어(sourceLang)를 대상 언어로
+        }
+        setSourceLang(newSourceLang);
+    };
+
+    // 5. 대상 언어 변경 핸들러 (드롭다운)
+    const handleTargetLangChange = (event) => {
+        const newTargetLang = event.target.value;
+        // 소스 언어와 동일하면, 소스 언어를 이전 대상 언어로 자동 교체
+        if (newTargetLang === sourceLang) {
+            setSourceLang(targetLang); // 이전 대상 언어(targetLang)를 소스 언어로
+        }
+        setTargetLang(newTargetLang);
+    };
+
+
+    // 6. 번역 실행 핸들러 (Gemini API 호출)
     const handleTranslate = useCallback(async () => {
         if (!inputText.trim()) {
             setMessage('번역할 내용을 입력해주세요.');
@@ -92,6 +123,10 @@ const TranslatorWidget = () => {
                 });
 
                 if (!response.ok) {
+                    // API 응답 상태 코드가 403이면 권한 문제로 가정하고, 다른 오류도 포착
+                    if (response.status === 403) {
+                         throw new Error(`Forbidden (API Key Issue). Please check the API key.`);
+                    }
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
@@ -127,25 +162,25 @@ const TranslatorWidget = () => {
     }, [inputText, sourceLang, targetLang]);
 
 
-    // 5. UI에 표시될 언어 이름
+    // 7. UI에 표시될 언어 이름 (Placeholder 등에 사용)
     const sourceLangName = LANG_MAP[sourceLang];
     const targetLangName = LANG_MAP[targetLang];
     
     return (
-        <div className="p-4 sm:p-6 md:p-8 bg-gray-50 min-h-full">
+        <div className="min-h-full">
             {/* CSS 스타일 임베드 */}
             <style>
                 {`
                 .translator-widget {
                     background-color: white;
-                    padding: 15px;
+                    padding: 12px;
                     border-radius: 12px;
                     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
                     color: #333;
                     display: flex; 
                     flex-direction: column;
                     width: 100%;
-                    min-height: 400px; /* 전체 위젯 최소 높이 */
+                    min-height: 300px;
                     max-width: 800px;
                     margin: 0 auto;
                 }
@@ -155,31 +190,46 @@ const TranslatorWidget = () => {
                     justify-content: space-between;
                     align-items: center; 
                     border-bottom: 2px solid #f0f0f0;
-                    padding-bottom: 10px;
-                    margin-bottom: 15px;
+                    padding-bottom: 8px;
+                    margin-bottom: 12px;
                 }
                 
-                .lang-select-bar button {
-                    background: none;
-                    border: none;
-                    font-size: 1.1em;
+                .lang-select-dropdown {
+                    background: #f7f9fc;
+                    border: 1px solid #e0e7ff;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 1.0em;
                     font-weight: 600;
-                    cursor: default; /* 언어 선택 버튼이므로 커서 변경 */
-                    color: #4a5568;
-                    padding: 5px 10px;
+                    color: #4c6ef5;
                     flex-grow: 1; 
                     text-align: center;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    cursor: pointer;
+                    /* 커스텀 드롭다운 화살표 (SVG) */
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234c6ef5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 8px center;
+                    padding-right: 30px; 
+                    margin: 0 5px; /* 스왑 버튼과의 간격 조정 */
+                }
+
+                /* 드롭다운 옵션의 폰트 색상 */
+                .lang-select-dropdown option {
+                    color: #333;
                 }
                 
                 .lang-select-bar .swap-button {
                     flex-grow: 0; 
-                    color: #4c6ef5; /* 밝은 파란색으로 변경 */
-                    padding: 8px;
-                    margin: 0 10px;
+                    color: #4c6ef5;
+                    padding: 6px;
+                    margin: 0 8px;
                     border: 2px solid #e0e7ff;
                     border-radius: 50%; 
-                    width: 36px;
-                    height: 36px;
+                    width: 32px;
+                    height: 32px;
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -197,20 +247,20 @@ const TranslatorWidget = () => {
                     display: flex;
                     flex-direction: column;
                     flex: 1;
-                    gap: 10px; /* 입력 영역과 결과 영역 사이의 간격 */
+                    gap: 8px;
                 }
 
                 .text-area-wrapper {
                     background-color: #f7f9fc;
-                    border-radius: 10px;
-                    padding: 15px;
+                    border-radius: 8px;
+                    padding: 10px;
                     border: 1px solid #e2e8f0;
                     position: relative;
                     flex: 1; 
                     display: flex;
                     flex-direction: column;
                     transition: border-color 0.2s;
-                    min-height: 150px;
+                    min-height: 100px;
                 }
 
                 .text-area-wrapper.result-area {
@@ -227,8 +277,8 @@ const TranslatorWidget = () => {
                     background: transparent;
                     resize: none;
                     outline: none;
-                    font-size: 1.05em;
-                    line-height: 1.6;
+                    font-size: 1em;
+                    line-height: 1.5;
                     padding: 0; 
                     font-family: inherit;
                     color: #333;
@@ -236,8 +286,8 @@ const TranslatorWidget = () => {
                 
                 .translated-text, .loading-text, .error-text {
                     margin: 0;
-                    font-size: 1.05em;
-                    line-height: 1.6;
+                    font-size: 1em;
+                    line-height: 1.5;
                     color: #333;
                 }
                 
@@ -258,7 +308,7 @@ const TranslatorWidget = () => {
                 }
 
                 .translate-button-container {
-                    padding: 15px 0 5px 0;
+                    padding: 10px 0 5px 0;
                     text-align: center;
                 }
 
@@ -266,14 +316,14 @@ const TranslatorWidget = () => {
                     background-color: #4c6ef5;
                     color: white;
                     border: none;
-                    padding: 10px 25px;
-                    border-radius: 8px;
+                    padding: 8px 20px;
+                    border-radius: 6px;
                     cursor: pointer;
-                    font-size: 1em;
+                    font-size: 0.95em;
                     font-weight: 600;
-                    box-shadow: 0 4px 10px rgba(76, 110, 245, 0.3);
+                    box-shadow: 0 3px 8px rgba(76, 110, 245, 0.3);
                     transition: all 0.2s;
-                    min-width: 120px;
+                    min-width: 100px;
                 }
                 
                 .translate-button:hover:not(:disabled) {
@@ -290,11 +340,11 @@ const TranslatorWidget = () => {
                 .message-bar {
                     background-color: #fbd38d;
                     color: #9c4221;
-                    padding: 8px;
+                    padding: 6px;
                     border-radius: 6px;
-                    margin-bottom: 10px;
+                    margin-bottom: 8px;
                     text-align: center;
-                    font-size: 0.9em;
+                    font-size: 0.85em;
                 }
                 `}
             </style>
@@ -307,16 +357,38 @@ const TranslatorWidget = () => {
                     </div>
                 )}
                 
-                {/* 5. 언어 선택 바 */}
+                {/* 5. 언어 선택 바 (드롭다운으로 변경) */}
                 <div className="lang-select-bar">
-                    <button className="text-blue-600">{sourceLangName}</button>
+                    <select
+                        className="lang-select-dropdown"
+                        value={sourceLang}
+                        onChange={handleSourceLangChange}
+                        title="소스 언어 선택"
+                    >
+                        {LANGUAGE_OPTIONS.map((lang) => (
+                            <option key={lang.code} value={lang.code}>
+                                {lang.name}
+                            </option>
+                        ))}
+                    </select>
                     
                     {/* 언어 교환 버튼 */}
                     <button className="swap-button" onClick={handleSwapLanguages} title="언어 교환">
                         {SwapIcon}
                     </button>
                     
-                    <button className="text-blue-600">{targetLangName}</button>
+                    <select
+                        className="lang-select-dropdown"
+                        value={targetLang}
+                        onChange={handleTargetLangChange}
+                        title="대상 언어 선택"
+                    >
+                        {LANGUAGE_OPTIONS.map((lang) => (
+                            <option key={lang.code} value={lang.code}>
+                                {lang.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 
                 <div className="text-area-group">

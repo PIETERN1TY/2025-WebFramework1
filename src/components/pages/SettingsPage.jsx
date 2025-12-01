@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 // 테마 색상 옵션
 const THEME_COLORS = [
-  { id: 'blue', name: '파란색', primary: '#1e3a5f', secondary: '#4a90e2', gradient: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)' },
-  { id: 'purple', name: '보라색', primary: '#4a1a5f', secondary: '#8b5cf6', gradient: 'linear-gradient(135deg,rgb(139, 79, 242) 0%,rgb(193, 127, 255) 100%)' },
-  { id: 'pink', name: '핑크색', primary: '#831843', secondary: '#ec4899', gradient: 'linear-gradient(135deg, #db2777 0%, #ec4899 100%)' },
+  { id: 'blue', name: '파란색', primary: '#5480F7', secondary: '#A9CBFF', gradient: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)' },
+  { id: 'purple', name: '보라색', primary: '#B85AFF', secondary: '#DEB3FF', gradient: 'linear-gradient(135deg,rgb(139, 79, 242) 0%,rgb(193, 127, 255) 100%)' },
+  { id: 'pink', name: '핑크색', primary: '#FF98F5', secondary: '#FFD6FB', gradient: 'linear-gradient(135deg, #db2777 0%, #ec4899 100%)' },
   { id: 'red', name: '빨간색', primary: '#7f1d1d', secondary: '#ef4444', gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)' },
-  { id: 'orange', name: '주황색', primary: '#7c2d12', secondary: '#f97316', gradient: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)' },
-  { id: 'yellow', name: '노란색', primary: '#854d0e', secondary: '#eab308', gradient: 'linear-gradient(135deg,rgb(248, 191, 66) 0%,rgb(245, 216, 128) 100%)' },
-  { id: 'lime', name: '라임색', primary: '#3f6212', secondary: '#84cc16', gradient: 'linear-gradient(135deg, #65a30d 0%, #84cc16 100%)' },
+  { id: 'orange', name: '주황색', primary: '#FD9941', secondary: '#FED1AA', gradient: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)' },
+  { id: 'yellow', name: '노란색', primary: '#EBDA18', secondary: '#F2EA8B', gradient: 'linear-gradient(135deg,rgb(248, 191, 66) 0%,rgb(245, 216, 128) 100%)' },
+  { id: 'lime', name: '라임색', primary: '#315555', secondary: '#72937B', gradient: 'linear-gradient(135deg, #65a30d 0%, #84cc16 100%)' },
   { id: 'gray', name: '회색', primary: '#374151', secondary: '#6b7280', gradient: 'linear-gradient(135deg, #4b5563 0%, #6b7280 100%)' }
 ];
 
@@ -148,6 +148,49 @@ const SettingsPage = () => {
     alert('설정이 저장되었습니다!');
   };
 
+  const handleDeleteAccount = () => {
+    const confirmed = window.confirm(
+      '⚠️ 정말로 탈퇴하시겠습니까?\n\n탈퇴 시 모든 데이터(캔버스, 메모 등)가 삭제되며 복구할 수 없습니다.'
+    );
+    
+    if (!confirmed) return;
+
+    const doubleCheck = window.confirm(
+      '다시 한 번 확인합니다.\n정말로 계정을 삭제하시겠습니까?'
+    );
+
+    if (!doubleCheck) return;
+
+    try {
+      // 사용자 관련 모든 데이터 삭제
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      delete users[currentUser.id];
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // 사용자별 데이터 삭제 (캔버스, 메모, 테마 등)
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.includes(currentUser.id)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+
+      // 현재 사용자 정보 삭제
+      localStorage.removeItem('currentUser');
+
+      alert('계정이 삭제되었습니다.');
+      
+      // 로그인 페이지로 이동
+      navigate('/login', { replace: true });
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('계정 삭제 오류:', error);
+      alert('계정 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   const handleLogout = () => {
     const confirmed = window.confirm('로그아웃하시겠습니까?');
     if (confirmed) {
@@ -167,7 +210,7 @@ const SettingsPage = () => {
   return (
     <div className="p-8 max-w-[1200px] mx-auto text-gray-800 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center">
-        <h1 className="text-[1.8em] font-normal mb-2.5 pb-1.5">설정</h1>
+        <h1 className="text-[1.8em] font-bold mb-2.5 pb-1.5">설정</h1>
       </div>
       
       <hr className="border-none border-t border-gray-300 mb-8" />
@@ -178,14 +221,14 @@ const SettingsPage = () => {
           
           {/* 닉네임 설정 */}
           <div className="mb-8">
-            <label htmlFor="nickname" className="block text-sm text-gray-600 mb-2.5 font-bold">
+            <label htmlFor="nickname" className="block text-md text-gray-600 mb-2.5 font-bold">
               닉네임
             </label>
             <input 
               type="text" 
               id="nickname"
               name="nickname"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-[0.8em] box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder="닉네임을 입력하세요" 
               value={formData.nickname}
               onChange={handleInputChange}
@@ -194,14 +237,14 @@ const SettingsPage = () => {
 
           {/* 이메일 설정 */}
           <div className="mb-8">
-            <label htmlFor="email" className="block text-sm text-gray-600 mb-2.5 font-bold">
+            <label htmlFor="email" className="block text-md text-gray-600 mb-2.5 font-bold">
               이메일
             </label>
             <input 
               type="email" 
               id="email"
               name="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-[0.8em] box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder="email@example.com" 
               value={formData.email}
               onChange={handleInputChange}
@@ -210,41 +253,23 @@ const SettingsPage = () => {
 
           {/* 비밀번호 설정 */}
           <div className="mb-8">
-            <label htmlFor="password" className="block text-sm text-gray-600 mb-2.5 font-bold">
+            <label htmlFor="password" className="block text-md text-gray-600 mb-2.5 font-bold">
               {hasPassword ? '새 비밀번호' : '비밀번호 설정'} (선택)
             </label>
             <input 
               type="password" 
               id="password"
               name="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md text-[0.8em] box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
               placeholder={hasPassword ? "새 비밀번호 (최소 6자)" : "비밀번호 설정 (최소 6자)"}
               value={formData.password}
               onChange={handleInputChange}
             />
           </div>
 
-          {/* 비밀번호 확인 */}
-          {(formData.password || formData.confirmPassword) && (
-            <div className="mb-8">
-              <label htmlFor="confirmPassword" className="block text-sm text-gray-600 mb-2.5 font-bold">
-                비밀번호 확인
-              </label>
-              <input 
-                type="password" 
-                id="confirmPassword"
-                name="confirmPassword"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-base box-border focus:outline-none focus:border-[var(--theme-secondary,#4a90e2)] focus:shadow-[0_0_0_3px_rgba(74,144,226,0.1)]"
-                placeholder="비밀번호를 다시 입력하세요" 
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-          )}
-
           {/* 테마 색상 선택 */}
           <div className="mb-8">
-            <label className="block text-sm text-gray-600 mb-2.5 font-bold">
+            <label className="block text-md text-gray-600 mb-2.5 font-bold">
               테마 색상
             </label>
             <div className="flex gap-3 mt-2.5 flex-wrap">
@@ -272,7 +297,7 @@ const SettingsPage = () => {
 
           {/* 저장 버튼 */}
           <button 
-            className="px-6 py-3 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 mt-5 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
+            className="px-6 py-3 text-white border-none rounded-lg text-[0.8em] font-semibold cursor-pointer transition-all duration-300 mt-5 hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
             style={{
               background: 'var(--theme-gradient, linear-gradient(135deg, #2563eb 0%, #3b82f6 100%))'
             }}
@@ -280,10 +305,18 @@ const SettingsPage = () => {
           >
             변경사항 저장
           </button>
+
+          {/* 탈퇴하기 버튼 */}
+          <button 
+            className="w-full px-6 py-3 text-[#8A8A8A] border-none rounded-lg text-[0.8em] cursor-pointer transition-all duration-300 mt-4 hover:-translate-y-0.5"
+            onClick={handleDeleteAccount}
+          >
+            회원 탈퇴
+          </button>
         </div>
 
         <div className="flex-[2] flex flex-col items-center justify-start">
-          <p className="text-sm text-gray-600 mb-4 font-bold text-center">
+          <p className="text-md text-gray-600 mb-4 font-bold text-center">
             프로필 사진
           </p>
           
@@ -309,7 +342,7 @@ const SettingsPage = () => {
           
           <label 
             htmlFor="profileImageInput" 
-            className="px-8 py-3 text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-all duration-300 inline-block hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
+            className="px-8 py-3 text-white border-none rounded-lg text-[0.8em] font-semibold cursor-pointer transition-all duration-300 inline-block hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(0,0,0,0.2)]"
             style={{
               background: 'var(--theme-gradient, linear-gradient(135deg, #2563eb 0%, #3b82f6 100%))'
             }}

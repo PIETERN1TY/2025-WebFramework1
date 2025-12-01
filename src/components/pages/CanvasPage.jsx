@@ -114,7 +114,7 @@ const CanvasPage = () => {
           🎨 {currentUser.nickname}님의 캔버스
         </h1>
         <button 
-          className="bg-blue-600 hover:bg-blue-700 text-white border-none px-8 py-4 rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,123,255,0.3)]"
+          className="bg-blue-600 hover:bg-blue-700 text-white border-none px-8 py-4 rounded-lg text-xl font-semibold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,123,255,0.3)]"
           onClick={handleCreateCanvas}
         >
           + 새 캔버스 만들기
@@ -138,7 +138,7 @@ const CanvasPage = () => {
           >
             {/* 활성 배지 */}
             {activeCanvasId === canvas.id && (
-              <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold z-10">
+              <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-1.5 rounded-full text-[0.8em] font-semibold z-10">
                 활성화됨
               </div>
             )}
@@ -152,7 +152,7 @@ const CanvasPage = () => {
             >
               <div className="text-center text-white">
                 <div className="text-6xl mb-2.5">📋</div>
-                <div className="text-xl font-medium">
+                <div className="text-2xl font-medium">
                   {canvas.layout?.length || 0}개 위젯
                 </div>
               </div>
@@ -160,10 +160,10 @@ const CanvasPage = () => {
             
             {/* 캔버스 정보 */}
             <div className="p-5">
-              <h3 className="text-xl text-gray-800 m-0 mb-2.5 font-semibold">
+              <h3 className="text-2xl text-gray-800 m-0 mb-2.5 font-semibold">
                 {canvas.name}
               </h3>
-              <p className="text-sm text-gray-400 m-0">
+              <p className="text-[0.8em] text-gray-400 m-0">
                 {new Date(canvas.createdAt).toLocaleDateString('ko-KR')}
               </p>
             </div>
@@ -171,14 +171,14 @@ const CanvasPage = () => {
             {/* 액션 버튼 */}
             <div className="flex gap-2.5 p-4 bg-gray-50 border-t border-gray-200">
               <button 
-                className="flex-1 px-2.5 py-2.5 border-none rounded-md text-sm font-semibold cursor-pointer transition-all duration-300 bg-green-600 hover:bg-green-700 text-white"
+                className="flex-1 px-2.5 py-2.5 border-none rounded-md text-md font-semibold cursor-pointer transition-all duration-300 bg-green-600 hover:bg-green-700 text-white"
                 onClick={(e) => handleActivateCanvas(e, canvas.id)}
                 title="홈 화면에 활성화"
               >
                 {activeCanvasId === canvas.id ? '✓ 활성' : '○ 활성화'}
               </button>
               <button 
-                className="flex-[0.3] px-2.5 py-2.5 border-none rounded-md text-sm font-semibold cursor-pointer transition-all duration-300 bg-red-600 hover:bg-red-700 text-white"
+                className="flex-[0.3] px-2.5 py-2.5 border-none rounded-md text-md font-semibold cursor-pointer transition-all duration-300 bg-red-600 hover:bg-red-700 text-white"
                 onClick={(e) => handleDeleteCanvas(e, canvas.id)}
                 title="캔버스 삭제"
               >
@@ -191,10 +191,10 @@ const CanvasPage = () => {
         {/* 빈 상태 메시지 */}
         {savedCanvases.length === 0 && (
           <div className="col-[1/-1] text-center py-20 px-5 text-gray-400">
-            <p className="text-2xl font-semibold text-gray-600 my-2.5">
+            <p className="text-3xl font-semibold text-gray-600 my-2.5">
               아직 저장된 캔버스가 없습니다.
             </p>
-            <p className="text-xl my-2.5">
+            <p className="text-2xl my-2.5">
               새 캔버스를 만들어보세요!
             </p>
           </div>
